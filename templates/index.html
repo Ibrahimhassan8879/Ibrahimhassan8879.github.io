@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}
+Index Page
+{% endblock %}
+{% block div %}
+{{Alert}}
+{% endblock %}
+
+{% block main %}
+<form>
+<table style="border : 1px solid black;border-collapse: collapse;">
+    <thead>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Shares</th>
+        <th>Price</th>
+        <th>Total</th>
+    </thead>
+    {% for stock in stocks %}
+    <tbody>
+        <td>{{stock.symbol}}</td>
+        <td>{{stock.name}}</td>
+        <td>{{stock.shares}}</td>
+        <td>{{stock.price}}</td>
+        <td>{{stock.total}}</td>
+    </tbody>
+    {% endfor %}
+
+    <tfoot>
+        <tr>
+            <td class="border-1px fw-bold text-center" colspan="4">Cash</td>
+            <td style="border-0 text-end">{{cash}}</td>
+        </tr>
+        <tr>
+            <td class="border-1px fw-bold text-center" colspan="4">total</td>
+            <td style="border-1px w-bold text-end;">{{total}}</td>
+        </tr>
+    </tfoot>
+
+</table>
+</form>
+{% endblock %}

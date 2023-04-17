@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}
+Home page
+{% endblock %}
+
+{% block main %}
+<form>
+<table>
+    <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Shares</th>
+        <th>Price</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Transaction_ID</th>
+    </tr>
+    {% for stock in stocks %}
+
+    <tr>
+        <td>{{stock.symbol}}</td>
+        <td>{{stock.name}}</td>
+        <td>{{stock.shares}}</td>
+        <td>{{stock.price}}</td>
+        <td>{{stock.type}}</td>
+        <td>{{stock.Timestamp}}</td>
+        <td>{{stock.transaction_id}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</form>
+{% endblock %}

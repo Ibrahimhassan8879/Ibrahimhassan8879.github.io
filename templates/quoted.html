@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}
+Quote Request
+{% endblock %}
+
+{% block main %}
+<form>
+<table style="border : 1px solid black;border-collapse: collapse;">
+    <tr >
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+    <tr>
+        <td>{{symbol}}</td>
+        <td>{{name}}</td>
+        <td>{{price}}</td>
+    </tr>
+</table>
+</form>
+{% endblock %}

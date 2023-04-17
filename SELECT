@@ -1,0 +1,39 @@
+    for stock in stocks:
+        for i in range(len(stocks)):
+        Valid_data = lookup(stock['symbol'])
+
+        stock['price']  = Valid_data["price"]
+        stock['name']   = Valid_data["name"]
+        stock['symbole'] = Valid_data["symbol"]
+        stock['shares'] = db.execute("SELECT shares FROM stocks WHERE user_id = ? AND symbol =? ",session["user_id"],stock["symbol"])
+
+    return render_template("/index.html",stocks = stocks)
+
+
+
+
+
+
+
+
+
+    """Show portfolio of stocks"""
+    "check if the user is new"
+    rows = db.execute("SELECT * FROM stocks WHERE user_id = ?",session["user_id"])
+    total_spent = 0
+    if len(rows) == 0:
+        return render_template("/index.html")
+
+    for row in rows:
+        row['total'] =0
+        Valid_data = lookup(row['symbol'])
+        row['price']  = Valid_data["price"]
+        row['name']   = Valid_data["name"]
+        row['symbol'] = Valid_data["symbol"]
+        row['total'] = row['shares'] * row['price']
+        total_spent += row['total']
+
+    cash = db.execute("SELECT cash FROM users WHERE id = ?" , session["user_id"])
+    cash = round(cash[0]['cash'],2)
+    total_money =  total_spent
+    return render_template("/index.html",stocks = rows , total = total_money , cash = cash)
