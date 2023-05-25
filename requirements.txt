@@ -2,3 +2,908 @@ cs50
 Flask
 Flask-Session
 requests
+
+
+import os
+
+from cs50 import SQL
+from flask import Flask, flash, redirect, render_template, request, session , url_for
+from flask_session import Session
+from tempfile import mkdtemp
+from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime , timedelta
+from pytz import timezone
+from helpers import apology, login_required
+import qrcode
+import io
+import base64
+from PIL import Image, ImageDraw, ImageFont
+from flask import send_file
+from Functions import check_variable_if_exists, Check_existing_variable_on_table, Check_password_identically
+
+# Configure application
+app = Flask(__name__)
+
+
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config['SESSION_COOKIE_NAME'] = 'your_cookie_name'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+# Configure CS50 Library to use SQLite database
+db = SQL("sqlite:///Database.db")
+
+
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+#Workers Accounts
+Admin_accounts = {1}
+Receptionist_accounts = {2, 3, 4, 5}
+Nurse_accounts = {6, 7, 8, 9, 10, 11, 12}
+Accountant_accounts = {13, 14}
+
+@app.route("/", methods=["GET"])
+def index():
+
+    """Show portfolio of stocks"""
+
+    return render_template("/index.html")
+
+#Admin page
+@app.route("/modify_doctors",methods=["GET","POST"])
+@login_required
+def modify():
+    if session['user_id'] not in Admin_accounts:
+        return render_template("/")
+    else:
+        #Getting all doctors name
+        Doctors_available = db.execute("SELECT * FROM Doctors")
+        Doctors_specialty = db.execute("SELECT * FROM Doctors_specialty")
+        if request.method == "GET":
+            return render_template("modify_doctors.html",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+        #Getting admin input
+        new_doctor_name = request.form.get("Doctor_name")
+        new_doctor_specialty = request.form.get("Doctor_specialty")
+        Days_available = request.form.get("Days_available")
+        removed_doctor_name = request.form.get("Doctor_removed")
+        new_doctor_price = request.form.get("Doctor_price")
+        Doctor_day_modified = request.form.get("Doctor_day_modified")
+        Doctor_new_days = request.form.get("Doctor_new_days")
+        Doctor_price_modified = request.form.get("Doctor_price_modified")
+        Doctor_new_price = request.form.get("Doctor_new_price")
+
+        #check if admin no inputs
+        if new_doctor_name == None and new_doctor_specialty == None and Days_available == None and new_doctor_price == None and removed_doctor_name == None  and Doctor_day_modified == None and Doctor_new_days == None and Doctor_price_modified == None and Doctor_new_price == None:
+            return render_template("modify_doctors.html",message_2= "Invalid Input",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+        #Remove Doctor
+        if new_doctor_name == None and new_doctor_specialty == None and Days_available == None and new_doctor_price == None and removed_doctor_name != None and Doctor_day_modified == None and Doctor_new_days == None and Doctor_price_modified == None and Doctor_new_price == None:
+
+            #removing Doctor and it's appointments
+            db.execute("DELETE FROM Doctors WHERE Doctor_name = ?",removed_doctor_name)
+            db.execute("DELETE FROM patient_reservation WHERE patient_doctor_reservation =?",removed_doctor_name)
+            New_doctors = db.execute("SELECT * FROM Doctors")
+            return render_template("modify_doctors.html",message_3="Doctor Removed Successfully",Doctors_available = New_doctors,Doctors_specialty=Doctors_specialty)
+
+        #Modify Doctor days
+        if new_doctor_name == None and new_doctor_specialty == None and Days_available == None and removed_doctor_name == None and new_doctor_price == None and Doctor_new_days != None and Doctor_price_modified == None and Doctor_new_price == None:
+
+            # Check if doctor didn't selected
+            if Doctor_day_modified == None:
+                return render_template("modify_doctors.html",message_5="you must select doctor",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check new days is valid
+            days_entered = Doctor_new_days.split()
+            for i in range(0 , len(days_entered) , 1):
+                day_check = db.execute("SELECT * FROM Week_date WHERE Week_days LIKE '%' || ? || '%'",days_entered[i])
+                if len(day_check) == 0 or Doctor_new_days == '':
+                    return render_template("modify_doctors.html",message_6="you must add Valid days",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            # Update doctor days
+            db.execute("UPDATE Doctors SET Days_available = ? WHERE Doctor_name = ?",Doctor_new_days, Doctor_day_modified)
+            New_doctors = db.execute("SELECT * FROM Doctors")
+            return render_template("modify_doctors.html",message_5=f"Doctor {Doctor_day_modified} Days Modified Successfully",Doctors_available = New_doctors,Doctors_specialty=Doctors_specialty)
+
+        # Modify Doctor price
+        if new_doctor_name == None and new_doctor_specialty == None and Days_available == None and removed_doctor_name == None and new_doctor_price == None and Doctor_day_modified == None and Doctor_new_days == None and Doctor_new_price != None:
+
+            # Check if doctor isn't selected
+            if Doctor_price_modified == None:
+                return render_template("modify_doctors.html",message_8="you must select doctor",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check price is valid
+            if Doctor_new_price.isnumeric() == False:
+                return render_template("modify_doctors.html",message_8="Invalid Price",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            # Update Doctor price
+            db.execute("UPDATE Doctors SET Doctor_price = ? WHERE Doctor_name = ?",Doctor_new_price,Doctor_price_modified)
+            New_doctors = db.execute("SELECT * FROM Doctors")
+            return render_template("modify_doctors.html",message_7=f"Doctor {Doctor_price_modified} Price Modified Successfully",Doctors_available = New_doctors,Doctors_specialty=Doctors_specialty)
+
+        # ADD New Doctor
+        if new_doctor_name != None and Days_available != None and new_doctor_price != None and removed_doctor_name == None  and Doctor_day_modified == None and Doctor_new_days == None and Doctor_price_modified == None and Doctor_new_price == None:
+
+            # Check if Doctor specialy
+            if new_doctor_specialty == None:
+                return render_template("modify_doctors.html",message_2 = "you must select doctor specialty",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check Doctor_name if it's numeric
+            if new_doctor_name.isalpha() == False:
+                return render_template("modify_doctors.html",message_2 = "the doctor name cannot have numbers",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check Doctor_name if exists
+            Doctor_name_check = db.execute("SELECT * FROM Doctors WHERE Doctor_name = ?",new_doctor_name)
+            if len(Doctor_name_check) == 1:
+                return render_template("modify_doctors.html",message_2="the doctor name has been already taken",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check if the specialty is founded
+            specialty = db.execute("SELECT * FROM Doctors_specialty WHERE Doctors_specialty = ?",new_doctor_specialty)
+            if len(specialty) != 1:
+                return render_template("modify_doctors.html",message_2="you must add the doctor specialty first",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check if the days is invalid
+            days_entered = Days_available.split()
+            for i in range(0 , len(days_entered) , 1):
+                day_check = db.execute("SELECT * FROM Week_date WHERE Week_days LIKE '%' || ? || '%'",days_entered[i])
+                if len(day_check) == 0 or Days_available == '':
+                    return render_template("modify_doctors.html",message_2="you must add Valid days",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #check if price is non-numeric
+            if new_doctor_price.isnumeric() == False:
+                return render_template("modify_doctors.html",message_2="Invalid Price",Doctors_available = Doctors_available,Doctors_specialty=Doctors_specialty)
+
+            #Add new doctor
+            db.execute("INSERT INTO Doctors (Doctor_name, Doctor_specialty , Days_available, doctor_price) VALUES (?,?,?,?)",new_doctor_name,new_doctor_specialty,Days_available,new_doctor_price)
+            db.execute("INSERT INTO Doctor_query (Doctor_name) VALUES(?)",new_doctor_name)
+            New_doctors_available = db.execute("SELECT * FROM Doctors")
+            return render_template("modify_doctors.html",message_1="Doctor Added Successfully",Doctors_available = New_doctors_available,Doctors_specialty=Doctors_specialty)
+
+@app.route("/modify_specialties",methods = ["GET","POST"])
+@login_required
+def modify_specialties():
+    if session['user_id'] not in Admin_accounts:
+        return render_template("/")
+
+    #Getting specialties information
+    specialties = db.execute("SELECT * FROM Doctors_specialty")
+
+    #admin gets page by "GET"
+    if request.method == "GET":
+        return render_template("modify_specialties.html", specialties=specialties)
+
+    #Getting user inputs
+    specialty_removed = request.form.get("specialty_removed")
+    specialty_add = request.form.get("specialty_add")
+
+    #check if input is blank
+    if specialty_removed == None and specialty_add == None:
+        return render_template("modify_specialties.html",message = "No input data", specialties=specialties)
+
+    elif specialty_removed != None and specialty_add != None:
+        return render_template("modify_specialties.html",message = "You cannot add & remove at the same time", specialties=specialties)
+
+    #Admin remove specialty
+    elif specialty_removed != None and specialty_add == None:
+
+        #specialty deletion
+        db.execute("DELETE FROM Doctors_specialty WHERE Doctors_specialty = ?",specialty_removed)
+
+        #getting the new list of specialties
+        specialties = db.execute("SELECT * FROM Doctors_specialty")
+        return render_template("modify_specialties.html",message = "Specialty Removed successfully", specialties=specialties)
+
+    #Admin add specialty
+    else:
+
+        #check if specialty added blank or multiple times
+        if specialty_add.isalpha() == False:
+            return render_template("modify_specialties.html",message = "Invalid specialty input", specialties=specialties)
+
+        #check if specialty added multiple times
+        specialty_check = db.execute("SELECT * FROM Doctors_specialty WHERE Doctors_specialty = ?",specialty_add)[0]['Doctors_specialty']
+        if len(specialty_check) != 0:
+            return render_template("modify_specialties.html",message = "This specialty already exists", specialties=specialties)
+
+        #specialty add
+        db.execute("INSERT INTO Doctors_specialty(Doctors_specialty) VALUES(?)",specialty_add)
+
+        #getting the new list of specialties
+        specialties = db.execute("SELECT * FROM Doctors_specialty")
+        return render_template("modify_specialties.html",message = "Specialty Added successfully", specialties=specialties)
+
+
+@app.route("/delete_patient", methods=["GET","POST"])
+@login_required
+def delete_patient():
+    if session['user_id'] not in Admin_accounts:
+        return render_template("/")
+
+    #Getting patients accounts
+    patient_information = db.execute("SELECT * FROM users  WHERE TYPE = ?","Patient")
+
+    if request.method == "GET":
+        return render_template("delete_patient.html",patient_information = patient_information)
+
+    account_name_delete = request.form.get("account_name_delete")
+
+    #check if admin blank input
+    if account_name_delete == None :
+        return render_template("delete_patient.html",message = "Enter Account username to Delete",patient_information = patient_information)
+
+    #search account result
+    db.execute("DELETE FROM users WHERE username = ?",account_name_delete)
+    db.execute("DELETE FROM Patients WHERE patient_name = ?",account_name_delete)
+    patient_information = db.execute("SELECT * FROM users WHERE TYPE = ?","Patient")
+    return render_template("delete_patient.html",message = "Account deleted succussfully" ,patient_information = patient_information)
+
+
+
+#receptionist pages
+@app.route("/reservation_patient",methods=["GET","POST"])
+@login_required
+def reservation_patient():
+    if session['user_id'] not in Receptionist_accounts:
+        return redirect("/")
+
+    #getting all specialties available
+    Doctors_specialty = db.execute("SELECT Doctors_specialty FROM doctors_specialty")
+    if request.method == "GET":
+
+        return render_template("reservation_patient.html",Doctors=Doctors_specialty)
+
+    #getting data from user
+    specialty = request.form.get("doctor_specialty")
+    if specialty == None:
+        return render_template("reservation_patient.html",message = "Cannot search with select Doctor specialty",Doctors=Doctors_specialty)
+    day = request.form.get("doctor_day")
+    return redirect(url_for('reservated_patient', specialty = specialty, day = day))
+
+@app.route("/reservated_patient", methods=["GET","POST"])
+@login_required
+def reservated_patient():
+    """Get stock quote."""
+    if session['user_id'] not in Receptionist_accounts:
+        return redirect("/")
+
+    patients_name = db.execute("SELECT patient_name FROM patients")
+    specialty = request.args.get("specialty")
+    day = request.args.get("day")
+    # If user gets page by get
+    if request.method == "GET":
+        if day == None:
+            Doctor_searched = db.execute("SELECT * FROM Doctors WHERE Doctor_specialty = ?",specialty)
+            return render_template("our_doctors_patient.html",Doctors = Doctor_searched, patients=patients_name)
+
+        Doctor_searched = db.execute("SELECT * FROM Doctors WHERE Doctor_specialty = ? AND Days_available LIKE '%' || ? || '%'",specialty,day)
+        return render_template("our_doctors_patient.html",Doctors = Doctor_searched, patients = patients_name)
+
+
+@app.route("/our_doctors_patient", methods=["GET","POST"])
+@login_required
+def our_doctors_patient():
+    if session['user_id'] not in Receptionist_accounts:
+        return redirect("/")
+
+    #query all of doctors
+    Doctors = db.execute("SELECT * FROM Doctors")
+    patients_name = db.execute("SELECT patient_name FROM patients")
+    # If user gets page by get
+    if request.method == "GET":
+        return render_template("our_doctors_patient.html",Doctors = Doctors,patients=patients_name)
+
+
+    Reserved_Doctor = request.form.get("doctor_name")
+    if Reserved_Doctor == None:
+        return render_template("our_doctors_patient.html",message = "Cannot make a reservation without select Doctor",Doctors = Doctors,patients=patients_name)
+    Patient_name = request.form.get("patient_name")
+    if Patient_name == None:
+        return render_template("our_doctors_patient.html",message = "Cannot make a reservation without select Patient",Doctors = Doctors,patients=patients_name)
+
+    Patient_id = db.execute("SELECT patient_id FROM patients WHERE patient_name = ?",Patient_name)[0]['patient_id']
+    Reserved_Doctor_specialty = db.execute("SELECT * FROM Doctors WHERE doctor_name = ?",Reserved_Doctor)[0]['Doctor_specialty']
+    day = request.form.get("doctor_day")
+    if day == None:
+        return render_template("our_doctors_patient.html",message = "Cannot make a reservation without select Day",Doctors = Doctors,patients=patients_name)
+    #check if the doctor has already reserved
+    Doctor_name = db.execute("SELECT * FROM patient_reservation WHERE patient_doctor_reservation = ? AND patient_id = ?",Reserved_Doctor,Patient_id)
+    if len(Doctor_name) != 0:
+        return render_template("our_doctors_patient.html",message = "cannot reserve the same doctor multiple times",Doctors = Doctors,patients=patients_name)
+    #check if the day is not in the list of doctor
+    Doctor_day = db.execute("SELECT * FROM Doctors WHERE Doctor_name = ? AND Days_available LIKE '%' || ? || '%'",Reserved_Doctor,day)
+    if len(Doctor_day) == 0:
+        return render_template("our_doctors_patient.html",message = "cannot reserve this doctor at that day",Doctors = Doctors,patients=patients_name)
+    #reserve a doctor
+    else:
+        db.execute("INSERT INTO patient_reservation (patient_id,patient_name, patient_doctor_reservation,patient_doctor_specialty,patient_doctor_date_time) VALUES (?)",(Patient_id,Patient_name,Reserved_Doctor,Reserved_Doctor_specialty,day))
+        db.execute("UPDATE patient_reservation SET patient_query = ( SELECT CASE patient_doctor_date_time WHEN 'Saturday' THEN Doctor_Saturday_queue WHEN 'Sunday' THEN Doctor_Sunday_queue WHEN 'Monday' THEN Doctor_Monday_queue WHEN 'Tuesday' THEN Doctor_Tuesday_queue WHEN 'Wednesday' THEN Doctor_Wednesday_queue WHEN 'Thursday' THEN Doctor_Thursday_queue WHEN 'Friday' THEN Doctor_Friday_queue  ELSE patient_query END FROM Doctor_query WHERE patient_reservation.patient_doctor_reservation = Doctor_query.Doctor_name ) WHERE patient_name = ?",Patient_name)
+        Doctors = db.execute("SELECT Doctors.Doctor_name, Doctors.Doctor_specialty,patient_reservation.patient_query, patient_reservation.patient_doctor_date_time, patient_reservation.reservation_id, patient_reservation.Time_stamp FROM Doctors JOIN patient_reservation ON Doctors.Doctor_name == patient_reservation.patient_doctor_reservation WHERE patient_reservation.patient_id = ?",Patient_id)
+        return render_template("myappointments.html",Doctors=Doctors)
+
+@app.route("/patientinformation", methods=["GET","POST"])
+@login_required
+def patientinformation():
+    if session['user_id'] not in Receptionist_accounts:
+        return redirect("/")
+
+    #query all patients names
+    patients_name = db.execute("SELECT patient_name FROM Patients")
+
+
+    if request.method == "GET":
+        return render_template("patientinformation.html")
+
+    #getting search information
+    patient_name = request.form.get("patient_name")
+    patient_phonenumber = request.form.get("patient_phonenumber")
+    patient_age = request.form.get("patient_age")
+    appoint_cancellation = request.form.get("cancel_appointment")
+
+    #check if user wants to cancel appointment patient
+    if patient_name == None and patient_phonenumber == None and patient_age == None:
+
+        #check if user didn't select doctor to remove appointment
+        if appoint_cancellation == None:
+            return render_template("patientinformation.html",message = "you must input data")
+
+
+    if patient_name != None and patient_phonenumber == None and patient_age == None:
+        return render_template("patientinformation.html",message = "you must input data")
+
+    #cancel appointment
+    if appoint_cancellation != None:
+        if patient_name == None and patient_phonenumber == None and patient_age == None:
+            return render_template("patientinformation.html",message="you must input patient_name")
+
+        else:
+            db.execute("DELETE FROM patient_reservation WHERE patient_doctor_reservation = ? AND patient_name = ?",appoint_cancellation,patient_data[0]['patient_name'])
+            return render_template("patientinformation.html")
+
+    #check if name not exists
+    if len(patient_data) == 0:
+        return render_template("patientinformation.html",message = "There is no patient information")
+
+    #Getting information from data base
+    patient_name_data = patient_data[0]['patient_name']
+    patient_appointments = db.execute("SELECT * FROM patient_reservation WHERE patient_name = ?",patient_name_data)
+    Doctors_appointed = db.execute("SELECT patient_doctor_reservation FROM patient_reservation WHERE patient_name = ?",patient_name_data)
+    return render_template("patientinformation.html",patient_data = patient_data,patient_appointments = patient_appointments)
+
+@app.route("/view_patients_reservation",methods=["GET","POST"])
+@login_required
+def view_patients_reservation():
+    if session['user_id'] not in Receptionist_accounts:
+        return redirect("/")
+    Reservation_data = db.execute("SELECT * FROM patient_reservation")
+
+    if request.method == "GET":
+        return render_template("view_patients_reservation.html",Reservation_data=Reservation_data)
+    else:
+        #query patients reservations
+        return render_template("view_patients_reservation.html")
+
+
+#Nurse pages
+@app.route("/Doctor_clinc",methods=["GET","POST"])
+@login_required
+def Doctor_clinc():
+    if session['user_id'] not in Nurse_accounts:
+        return redirect("/")
+
+    # Getting doctor name & doctor day
+    Doctors = db.execute("SELECT * FROM Doctors")
+
+
+    # Getting page by "GET"
+    if request.method == "GET":
+        return render_template("Doctor_clinc.html",Doctors_name = Doctors)
+
+
+    Doctor_clinc = request.form.get("Doctor_clinc")
+    day = request.form.get("doctor_day")
+
+    if Doctor_clinc == None or day == None:
+        return render_template("Doctor_clinc.html",Doctors_name = Doctors_name)
+
+    return redirect(url_for('Doctor_clinc_reservations', Doctor_clinc = Doctor_clinc , day = day))
+
+@app.route("/Doctor_clinc_reservations",methods=["GET","POST"])
+@login_required
+def Doctor_clinc_reservations():
+    if session['user_id'] not in Nurse_accounts:
+        return redirect("/")
+
+
+    Doctor_clinc = request.args.get("Doctor_clinc")
+    day = request.args.get("day")
+    # Getting Doctor reservations at specific day
+    Doctors = db.execute("SELECT * FROM patient_reservation WHERE reservation_status = ? AND patient_doctor_reservation = ? AND patient_doctor_date_time = ?","Unchecked",Doctor_clinc,day)
+
+
+    # Getting doctor reservations from past page
+    if request.method == "GET":
+        return render_template("Doctor_clinc_reservations.html",Doctors = Doctors,Doctor_clinc = Doctor_clinc, day = day)
+
+
+    patient_query = request.form.get("patient_query")
+    Doctor_clinc = request.form.get("Doctor_clinc")
+    day = request.form.get("day")
+
+    # Getting Doctor reservations at specific day
+    Doctors = db.execute("SELECT * FROM patient_reservation WHERE reservation_status = ? AND patient_doctor_reservation = ? AND patient_doctor_date_time = ?","Unchecked",Doctor_clinc,day)
+    db.execute("UPDATE patient_reservation SET reservation_status = ? WHERE patient_query = ? AND patient_doctor_reservation = ? AND patient_doctor_date_time = ?","Checked",patient_query,Doctor_clinc,day)
+    Doctors = db.execute("SELECT * FROM patient_reservation WHERE reservation_status = ? AND patient_doctor_reservation = ? AND patient_doctor_date_time = ?","Unchecked",Doctor_clinc,day)
+
+    return render_template("Doctor_clinc_reservations.html",Doctors = Doctors,Doctor_clinc = Doctor_clinc, day = day)
+
+
+
+#Client pages
+@app.route("/reservation",methods=["GET","POST"])
+@login_required
+def reservation():
+
+    Doctors_specialty = db.execute("SELECT Doctors_specialty FROM doctors_specialty")
+    if request.method == "GET":
+        return render_template("reservation.html",Doctors=Doctors_specialty)
+
+    #getting data from user
+    specialty = request.form.get("doctor_specialty")
+    if specialty == None:
+        return render_template("reservation.html",message = "Cannot make a reservation without select Doctor specialty",Doctors=Doctors_specialty)
+    day = request.form.get("doctor_day")
+    return redirect(url_for('reservated', specialty = specialty, day = day))
+
+@app.route("/reservated", methods=["GET","POST"])
+def reservated():
+    """Get stock quote."""
+
+    specialty = request.args.get("specialty")
+    day = request.args.get("day")
+    # If user gets page by get
+    if request.method == "GET":
+        if day == None:
+            Doctor_searched = db.execute("SELECT * FROM Doctors WHERE Doctor_specialty = ?",specialty)
+            return render_template("our_doctors.html",Doctors = Doctor_searched)
+
+        Doctor_searched = db.execute("SELECT * FROM Doctors WHERE Doctor_specialty = ? AND Days_available LIKE '%' || ? || '%'",specialty,day)
+        return render_template("our_doctors.html",Doctors = Doctor_searched)
+
+@app.route("/myappointments", methods=["GET"])
+@login_required
+def myappointments():
+
+    #query the patient appointments
+    Patient_id = db.execute("SELECT * FROM Patients WHERE user_id = ?",session['user_id'])
+
+    #check if patient new account
+    if len(Patient_id) == 0:
+        return render_template("myappointments.html")
+    Patient_id = Patient_id[0]['patient_id']
+    Doctors = db.execute("SELECT * FROM Doctors JOIN patient_reservation ON Doctors.Doctor_name == patient_reservation.patient_doctor_reservation WHERE patient_reservation.patient_id = ?",Patient_id)
+    return render_template("myappointments.html",Doctors=Doctors)
+
+#All Access pages
+@app.route("/our_doctors", methods=["GET","POST"])
+def our_doctors():
+
+    #query all of doctors
+    Doctors = db.execute("SELECT * FROM Doctors")
+
+    if 'user_id' in session:
+        #query patient data
+        Patient_DATA = db.execute("SELECT * FROM Patients WHERE user_id = ?",session['user_id'])
+        Patient_id = Patient_DATA[0]['patient_id']
+        Patient_name = Patient_DATA[0]['patient_name']
+
+    # If user gets page by get
+    if request.method == "GET":
+        return render_template("our_doctors.html",Doctors = Doctors)
+
+
+    Reserved_Doctor = request.form.get("doctor_name")
+    if Reserved_Doctor == None:
+        return render_template("our_doctors.html",message = "Cannot make a reservation without select Doctor",Doctors = Doctors)
+    Reserved_Doctor_specialty = db.execute("SELECT * FROM Doctors WHERE doctor_name = ?",Reserved_Doctor)[0]['Doctor_specialty']
+    day = request.form.get("doctor_day")
+    if day == None:
+        return render_template("our_doctors.html",message = "Cannot make a reservation without selecting Day",Doctors = Doctors)
+    #check if the doctor has already reserved
+    Doctor_name = db.execute("SELECT * FROM patient_reservation WHERE patient_doctor_reservation = ? AND patient_id = ?",Reserved_Doctor,Patient_id)
+    if len(Doctor_name) != 0:
+        return render_template("our_doctors.html",message = "cannot reserve the same doctor multiple times",Doctors = Doctors)
+    #check if the day is not in the list of doctor
+    Doctor_day = db.execute("SELECT * FROM Doctors WHERE Doctor_name = ? AND Days_available LIKE '%' || ? || '%'",Reserved_Doctor,day)
+    if len(Doctor_day) == 0:
+        return render_template("our_doctors.html",message = "cannot reserve this doctor at that day",Doctors = Doctors)
+    #reserve a doctor
+    else:
+        db.execute("INSERT INTO patient_reservation (patient_id,patient_name, patient_doctor_reservation,patient_doctor_specialty,patient_doctor_date_time) VALUES (?)",(Patient_id,Patient_name,Reserved_Doctor,Reserved_Doctor_specialty,day))
+        db.execute("UPDATE patient_reservation SET patient_query = ( SELECT CASE patient_doctor_date_time WHEN 'Saturday' THEN Doctor_Saturday_queue WHEN 'Sunday' THEN Doctor_Sunday_queue WHEN 'Monday' THEN Doctor_Monday_queue WHEN 'Tuesday' THEN Doctor_Tuesday_queue WHEN 'Wednesday' THEN Doctor_Wednesday_queue WHEN 'Thursday' THEN Doctor_Thursday_queue WHEN 'Friday' THEN Doctor_Friday_queue  ELSE patient_query END FROM Doctor_query WHERE patient_reservation.patient_doctor_reservation = Doctor_query.Doctor_name ) WHERE patient_name = ?",Patient_name)
+        Doctors = db.execute("SELECT Doctors.Doctor_name, Doctors.Doctor_specialty,patient_reservation.patient_query, patient_reservation.patient_doctor_date_time, patient_reservation.reservation_id, patient_reservation.Time_stamp FROM Doctors JOIN patient_reservation ON Doctors.Doctor_name == patient_reservation.patient_doctor_reservation WHERE patient_reservation.patient_id = ?",Patient_id)
+        return render_template("myappointments.html",Doctors=Doctors)
+
+
+@app.route("/get_your_ticket",methods=["GET","POST"])
+@login_required
+def get_ticket():
+
+    #For the users
+    if session['user_id'] not in Receptionist_accounts:
+        #getting user doctors_reservated
+        #query the patient appointments
+        Patient_id = db.execute("SELECT * FROM Patients WHERE user_id = ?",session['user_id'])[0]['patient_id']
+        doctors_reservated = db.execute("SELECT patient_doctor_reservation FROM patient_reservation WHERE patient_id = ?",Patient_id)
+        patient_age = db.execute("SELECT patient_age FROM Patients WHERE patient_id = ?",Patient_id)
+        if request.method == "GET":
+            return render_template("ticket.html",doctors_reservated = doctors_reservated)
+
+        #getting doctor name
+        doctor_reservation = request.form.get("doctor_reservation")
+        reservation_data = db.execute("SELECT * FROM patient_reservation WHERE patient_doctor_reservation = ?",doctor_reservation)
+        reservation_price = db.execute("SELECT Doctor_price FROM Doctors WHERE Doctor_name = ?",doctor_reservation)
+
+    #for the receptionistists
+    elif session['user_id'] in Receptionist_accounts:
+        patient_name = db.execute("SELECT * FROM Patients")
+        doctors_reservated = db.execute("SELECT * FROM Doctors")
+
+        if request.method == "GET":
+            return render_template("ticket.html",doctors_reservated = doctors_reservated,patient_name=patient_name)
+
+        #getting doctor name
+        patient_name_get = request.form.get("patient_name")
+        doctor_reservation = request.form.get("doctor_reservation")
+        reservation_data = db.execute("SELECT * FROM patient_reservation WHERE patient_doctor_reservation = ? AND patient_name = ?",doctor_reservation,patient_name_get)
+        patient_age = db.execute("SELECT patient_age FROM Patients WHERE patient_name = ?",patient_name_get)
+        reservation_price = db.execute("SELECT Doctor_price FROM Doctors WHERE Doctor_name = ?",doctor_reservation)
+        reservation_status = reservation_data[0]['reservation_status']
+
+        #check if the patient didn't reservated the doctor
+        if len(reservation_data) == 0:
+            return render_template("ticket.html",message = "This patient didn't reserved the doctor you have entered !",doctors_reservated = doctors_reservated,patient_name=patient_name)
+
+        #check if the patient already checked doctor
+        if reservation_status != "Unchecked":
+            return render_template("ticket.html",message = "This patient has been Checked already !",doctors_reservated = doctors_reservated,patient_name=patient_name)
+    # Extract the relevant fields from the reservation_data
+    patient_id = reservation_data[0]['patient_id']
+    patient_name = reservation_data[0]['patient_name']
+    patient_age = patient_age[0]['patient_age']
+    patient_doctor_reservation = reservation_data[0]['patient_doctor_reservation']
+    patient_doctor_date_time = reservation_data[0]['patient_doctor_date_time']
+    patient_doctor_specialty = reservation_data[0]['patient_doctor_specialty']
+    reservation_price = reservation_price[0]['Doctor_price']
+    patient_query = reservation_data[0]['patient_query']
+    patient_reservation_timestamp = reservation_data[0]['Time_stamp']
+    patient_reservation_id = reservation_data[0]['reservation_id']
+
+    # Concatenate the reservation information as a string
+    reservation_info =   f"Doctor Name:          {patient_doctor_reservation}\n" \
+                         f"Doctor Specialty:     {patient_doctor_specialty}\n" \
+                         f"Reservation Day:     {patient_doctor_date_time}\n" \
+                         f"Reservation Price:   {reservation_price}.00 $\n" \
+                         f"\n" \
+                         f"Patient ID:               {patient_id}\n" \
+                         f"Patient Name:         {patient_name}\n" \
+                         f"Patient Age:            {patient_age}\n" \
+                         f"\n" \
+                         f"Your Queue:             {patient_query}\n" \
+                         f"Time Reservated:     {patient_reservation_timestamp}\n" \
+                         f"Reservation ID:         {patient_reservation_id}\n"
+
+    # Concatenate the reservation information as a string
+    reservation_info_1 = f"Doctor Name:          {patient_doctor_reservation}\n" \
+                         f"Doctor Specialty:     {patient_doctor_specialty}\n" \
+                         f"Reservation Day:     {patient_doctor_date_time}\n" \
+                         f"Reservation Price:   {reservation_price}.00 $\n" \
+                         f"\n" \
+                         f"Patient ID:               {patient_id}\n" \
+                         f"Patient Name:         {patient_name}\n" \
+                         f"Patient Age:            {patient_age}\n"
+
+    reservation_info_2 = f"Your Queue:             {patient_query}\n" \
+                         f"Time Reservated:     {patient_reservation_timestamp}\n" \
+                         f"Reservation ID:         {patient_reservation_id}\n" \
+
+    reservation_info_3 = f"Note: The ticket will not be considered\n""unless it have the hospital name stamp on\n""the same day of reservation"
+
+    # Generate the QR code
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(reservation_info)
+    qr.make(fit=True)
+    qr_image = qr.make_image(fill='black', back_color='white')
+
+    # Resize the QR code image
+    qr_size = (120, 120)  # Set the desired size of the QR code image
+    qr_image = qr_image.resize(qr_size)
+
+    # Create a new image with the reservation data and the QR code
+    ticket_size = (400, 800)  # Set the desired size of the ticket image
+    ticket_image = Image.new('RGB', ticket_size, 'white')
+    draw = ImageDraw.Draw(ticket_image)
+
+    # Draw a solid border
+    border_color = 'black'
+    border_width = 2
+    draw.rectangle([(0, 0), (ticket_size[0] - 1, ticket_size[1] - 1)], outline=border_color, width=border_width)
+
+    # Load the source image
+    source_image = Image.open('/workspaces/104943996/Problem_sets/Final_Project/hospital/static/Logo-final_300-200.png')
+    x = 50
+    y = 5
+
+    #paste logo
+    ticket_image.paste(source_image , (x,y))
+
+
+    # Set the desired font and text size
+    font_size = 16
+    font = ImageFont.truetype("/workspaces/104943996/Problem_sets/Final_Project/hospital/static/arial.ttf", font_size)
+
+    # Draw the reservation data 1 on the image
+    text_y = 225
+    for line in reservation_info_1.split('\n'):
+        draw.text((50, text_y), line, fill='black', font=font)
+        text_y += font_size + 4
+
+    # Calculate the position to paste the QR code in the ticket image
+    qr_x = 140
+    qr_y = text_y - 12
+
+    # Paste the resized QR code image on the ticket image
+    ticket_image.paste(qr_image, (qr_x, qr_y))
+
+    # Draw the reservation data 2 on the image
+    text_y = 520
+    for line in reservation_info_2.split('\n'):
+        draw.text((50, text_y), line, fill='black', font=font)
+        text_y += font_size + 4
+
+    # Draw the reservation data 2 on the image
+    text_y = 720
+    for line in reservation_info_3.split('\n'):
+        draw.text((50, text_y), line, fill='black', font=font)
+        text_y += font_size + 4
+
+    # Save the image to a byte stream
+    image_byte_arr = io.BytesIO()
+    ticket_image.save(image_byte_arr, format='PNG')
+    image_byte_arr.seek(0)
+
+    # Check if receptionist save
+    if session['user_id'] in Receptionist_accounts:
+
+        #save the image to a file folder receptionist tickets
+        image_path = f"/workspaces/104943996/Problem_sets/Final_Project/hospital/Tickets_receptionist_{session['user_id']-1}/reservation_ticket Reservation_ID {patient_reservation_id} Time stamp {patient_reservation_timestamp}.png"
+        ticket_image.save(image_path, format='PNG')
+
+    else:
+        # Save the image to a file for users in tickets
+        image_path = f"/workspaces/104943996/Problem_sets/Final_Project/hospital/Tickets/reservation_ticket Reservation_ID {patient_reservation_id} Time stamp {patient_reservation_timestamp}.png"
+        ticket_image.save(image_path, format='PNG')
+
+    # Convert the image to a base64-encoded string
+    base64_image = base64.b64encode(image_byte_arr.getvalue()).decode('utf-8')
+
+    # Render the template with the reservation ticket image
+    return render_template('ticket.html', base64_image=base64_image, reservation_data=reservation_data[0], doctors_reservated = doctors_reservated)
+
+
+@app.route("/contact_us",methods=["GET"])
+def contact_us():
+
+    return render_template("contact_us.html")
+
+#Accounts pages
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return apology("invalid username and/or password", 403)
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+
+@app.route("/resetpassword", methods=["GET", "POST"])
+def resetpassword():
+
+    # If user gets page by get
+    if request.method == "GET":
+        return render_template("resetpassword.html")
+
+    # If user gets page by post
+    else:
+
+        # Checking the username in database for valid account
+        username_check = request.form.get("username")
+        username = db.execute("SELECT * from users WHERE username = ?", username_check)
+        if len(username) != 1:
+            return apology("Username you've entered doesn't exist")
+        else:
+
+            # Checking if the entry two passwords is not the same
+            new_password = request.form.get("resetpassword")
+            passwordconfirmation = request.form.get("passwordconfirmation")
+            if new_password != passwordconfirmation:
+                return apology("Passwords must be the same")
+
+            # Checking if the old password is the same as the new one
+            old_password = db.execute("SELECT hash FROM users WHERE username = ?", username_check)
+            same_password = check_password_hash(old_password, new_password)
+            if same_password != 0:
+                return apology("Password can't be the same as the old one !")
+
+            # Implementing the new password hash to database
+            hash_pass = generate_password_hash(new_password)
+            db.execute("UPDATE users SET hash = ? WHERE username = ?", hash_pass, request.form.get("username"))
+            return redirect("/")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+
+#Register for only for Admin & Receptionists
+@app.route("/register_log", methods=["GET", "POST"])
+@login_required
+def register_log():
+
+    if session['user_id'] in Admin_accounts or session['user_id'] in Receptionist_accounts:
+        if request.method == "GET":
+            render_template("/register_log.html")
+    else:
+        return redirect("/")
+
+    if request.method == "POST":
+
+        # New username entry
+        username = request.form.get("username")
+        Email = request.form.get("Email")
+        Phone_number = request.form.get("Phone_number")
+        ADRESS = request.form.get("Address")
+        AGE = request.form.get("AGE")
+        password = request.form.get("password")
+        password_confirmation = request.form.get("confirmation")
+
+
+        Variables = [username , Email , Phone_number , ADRESS , AGE , password , password_confirmation]
+        Variables_name = ["username" , "Email" , "Phone_number" , "Address" , "Age" , "password" , "Password confirmation"]
+        Variables_name_Table = ["username" , "Email" , "Phone_number" , "Address" , "Age" , "password", "Password confirmation"]
+
+        # Blank Inputs
+        if check_variable_if_exists(Variables,Variables_name,0,7,"/register_log.html"):
+            return check_variable_if_exists(Variables,Variables_name,0,7,"/register_log.html")
+
+        # Check Password & it's confirmation not the same
+        if Check_existing_variable_on_table(Variables,Variables_name,0,3,Variables_name_Table,"users","/register_log.html"):
+            return Check_existing_variable_on_table(Variables,Variables_name,0,3,Variables_name_Table,"users","/register_log.html")
+
+        # Password & it's confirmation not the same
+        if Check_password_identically(password,password_confirmation,"Password",7,"/register_log.html"):
+            return Check_password_identically(password,password_confirmation,"Password",7,"/register_log.html")
+
+        # Password hashing
+        password = generate_password_hash(request.form.get("password"))
+
+        # Account Data insertion
+        db.execute("INSERT INTO users (username,hash,Phone_number,AGE,ADRESS,Email) VALUES (?)", (username, password,Phone_number,AGE,ADRESS,Email))
+
+        # Aquiring session
+        return redirect("/")
+
+    # Rendering page
+    return render_template("/register_log.html")
+
+
+#Register for users
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    # Forget any user_id
+    session.clear()
+
+    if request.method == "GET":
+        render_template("/register.html")
+
+    if request.method == "POST":
+
+        # New username entry
+        username = request.form.get("username")
+        Email = request.form.get("Email")
+        Phone_number = request.form.get("Phone_number")
+        ADRESS = request.form.get("Address")
+        AGE = request.form.get("AGE")
+        password = request.form.get("password")
+        password_confirmation = request.form.get("confirmation")
+
+        # Making variables into list
+        Variables = [username , Email , Phone_number , ADRESS , AGE , password , password_confirmation]
+        Variables_name = ["username" , "Email" , "Phone_number" , "Address" , "Age" , "password" , "Password confirmation"]
+        Variables_name_Table = ["username" , "Email" , "Phone_number" , "Address" , "Age" , "password", "Password confirmation"]
+
+        # Check Blank Inputs
+        if check_variable_if_exists(Variables,Variables_name,0,7,"/register.html"):
+            return check_variable_if_exists(Variables,Variables_name,0,7,"/register.html")
+
+        # Check Variables if already exists
+        if Check_existing_variable_on_table(Variables,Variables_name,0,3,Variables_name_Table,"users","/register.html"):
+            return Check_existing_variable_on_table(Variables,Variables_name,0,3,Variables_name_Table,"users","/register.html")
+
+        # Check Password & it's confirmation not the same
+        if Check_password_identically(password,password_confirmation,"Password",7,"/register.html"):
+            return Check_password_identically(password,password_confirmation,"Password",7,"/register.html")
+
+        # Password hashing
+        password = generate_password_hash(request.form.get("password"))
+
+        # Account Data insertion
+        db.execute("INSERT INTO users (username,hash,Phone_number,AGE,ADRESS,Email) VALUES (?)", (username, password,Phone_number,AGE,ADRESS,Email))
+
+        # Aquiring session
+        return redirect("/")
+
+    # Rendering page
+    return render_template("/register.html")
+
+
+reservations_checked = db.execute("SELECT * FROM patient_reservation_checked WHERE reservation_status = ? AND Time_stamp >= ? AND Time_stamp <= ? AND patient_doctor_reservation = ? AND receptionist_name = ? AND nurse_name = ?", "Checked", Date_from, Date_to, Doctors_name, Receptionists_name, Nurses_name)
+
+
+
+
+
+    # Calculate sum of reservations
+    Sum_of_reservations_total = db.execute("SELECT SUM(Doctor_price) FROM patient_reservation_reviewed WHERE Time_stamp >= ? AND Time_stamp <= ?",Date_from,Date_to)[0]['SUM(Doctor_price)']
+
+    # Calculate sum of reservations per doctor
+    rows = db.execute("SELECT DISTINCT(patient_doctor_reservation) AS Doctor_name, SUM(Doctor_price) AS Doctor_price, COUNT(reservation_id) AS Doctor_reservations FROM patient_reservation_reviewed WHERE Time_stamp >= ? AND Time_stamp <= ? GROUP BY patient_doctor_reservation ORDER BY patient_doctor_reservation", Date_from, Date_to)
+    Doctor_table = db.execute("CREATE TABLE IF NOT EXISTS Doctor_table (Doctor_name TEXT, Doctor_price INTEGER, Doctor_reservations INTEGER)")
+
+    for row in rows:
+        db.execute("INSERT OR IGNORE IF EXISTS INTO Doctor_table (Doctor_name, Doctor_price, Doctor_reservations) VALUES (?, ?, ?)", row['Doctor_name'], row['Doctor_price'], row['Doctor_reservations'])
+
+    Table = db.execute("SELECT * FROM Doctor_table")
