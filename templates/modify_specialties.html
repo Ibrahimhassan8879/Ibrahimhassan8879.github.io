@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<style>
+    .case
+    {
+        display:none;
+    }
+</style>
+<h1>Specialty</h1>
+
+<div id="caseselector">
+    <button onclick="showCase(1)" class="btn btn-primary">Remove</button>
+    <button onclick="showCase(2)" class="btn btn-primary">Add</button>
+</div>
+
+<div class="case" id = "case1">
+<p></p>
+<form action="/modify_specialties" method="POST">
+    <div>Remove Specialty</div>
+        <p></p>
+        <select class="form-control mx-auto w-auto" name ="specialty_removed">
+            <div class="mb-3">
+                <option  selected disabled class="form-control mx-auto w-auto">Select Specialty</option>
+            </div>
+        {% for specialty in specialties %}
+            <div class="mb-3">
+                <option  name="specialty_removed"  class="form-control mx-auto w-auto">{{specialty.Doctors_specialty}}</option>
+            </div>
+        {% endfor %}
+        </select>
+        <p></p>
+        <div>
+            <button type="submit" class="btn btn-primary">Remove Specialty</button>
+        </div>
+</form>
+</div>
+<div class="case" id = "case2">
+<form action = "/modify_specialties" method = "POST">
+    <p></p>
+    <div>Add Specialty</div>
+    <p></p>
+    <div class="mb-3">
+        <input type="text" name = "specialty_add" placeholder="Specialty" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Add Specialty</button>
+    </div>
+    <p>{{message}}</p>
+</form>
+</div>
+<script>
+    function showCase(caseNumber)
+    {
+        var cases = document.getElementsByClassName('case');
+        for (var i = 0; i < cases.length; i++)
+        {
+        cases[i].style.display = 'none';
+        }
+    var selectedCase = document.getElementById('case' + caseNumber);
+    selectedCase.style.display = 'block';
+    }
+</script>
+{% endblock %}

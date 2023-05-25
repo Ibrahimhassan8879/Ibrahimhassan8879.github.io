@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}
+     Reservations Review
+{% endblock %}
+
+{% block main %}
+<form action ="/review_reservations" method="POST">
+    <div>
+        Choose Reservations Reviewed
+    </div>
+    <input type="hidden" name="Doctor_clinc" value="{{Doctor_clinc}}" class=" mx-auto w-auto">
+    <input type="hidden" name="day" value="{{day}}" class=" mx-auto w-auto">
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "reservation_id_reviewed" class="form-control mx-auto w-auto">
+        <option disabled selected >Reservations ID</option>
+        {% for reservation in reservations_checked %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{reservation.reservation_id}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Review</button>
+    <p></p>
+</form>
+<p>Important Note: Contact Administrator if you have misclicked on reservation check list</p>
+<form>
+<table>
+    <tr>
+        <th>Reservation ID</th>
+        <th>Receptionist Name</th>
+        <th>Nurse Name</th>
+        <th>Doctor Name</th>
+        <th>Patient Name</th>
+        <th>Reservation Price</th>
+        <th>Checked Time</th>
+    </tr>
+    {% for reservation in reservations_checked %}
+
+
+    <tr>
+        <td>{{reservation.reservation_id}}</td>
+        <td>{{reservation.receptionist_name}}</td>
+        <td>{{reservation.nurse_name}}</td>
+        <td>{{reservation.patient_doctor_reservation}}</td>
+        <td>{{reservation.patient_name}}</td>
+        <td>{{reservation.doctor_price}}</td>
+        <td>{{reservation.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+</form>
+{% endblock %}

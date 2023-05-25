@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Review Reservations
+{% endblock %}
+
+{% block main %}
+    <form action="/Doctors_evaluation" method="POST">
+        <p>Date From</p>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="Date_from" placeholder="Date_from" type="date">
+        </div>
+        <p>Date to</p>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="Date_to" placeholder="Date_to" type="date">
+        </div>
+        <button class="btn btn-primary" type="submit">Review Reservations</button>
+    </form>
+    <p></p>
+    <p>{{message}}</p>
+    <form>
+        <p></p>
+        <table>
+            <tr>
+                <th> Doctor Name</td>
+                <th> Doctor Total Reservations</td>
+                <th> Doctor Total Cash</td>
+            </tr>
+            {% for row in List %}
+            <tr>
+                <td>{{row.Doctor_name}}</td>
+                <td>{{row.Doctor_reservations}}</td>
+                <td>{{row.Doctor_price}}.00 $</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p></p>
+        <table>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Receptionist Name</th>
+                <th>Nurse Name</th>
+                <th>Doctor Name</th>
+                <th>Reservation Price</th>
+                <th>Reviewed Date</th>
+            </tr>
+            {% for reservation in reservations_reviewed %}
+
+
+            <tr>
+                <td>{{reservation.reservation_id}}</td>
+                <td>{{reservation.receptionist_name}}</td>
+                <td>{{reservation.nurse_name}}</td>
+                <td>{{reservation.patient_doctor_reservation}}</td>
+                <td>{{reservation.doctor_price}}.00 $</td>
+                <td>{{reservation.Time_stamp}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Total Reservations Cash</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{Sum_of_reservations_total}}.00 $</td>
+            </tr>
+        </table>
+        </form>
+        <img src="data:image/png;base64,{{ graph_url }}" alt="Doctor Graph"><img src="data:image/png;base64,{{ graph_url_2 }}" alt="Doctor Graph">
+{% endblock %}

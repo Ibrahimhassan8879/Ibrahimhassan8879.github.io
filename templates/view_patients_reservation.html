@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/view_patients_reservation" method="POST">
+<table>
+    <tr>
+        <th>Patient Name</th>
+        <th>Doctor Reservated</th>
+        <th>Specialty</th>
+        <th>Date</th>
+        <th>Queue</th>
+        <th>Reservation_id</th>
+        <th>Reservation status</th>
+    </tr>
+    {% for Data in Reservation_data %}
+
+
+    <tr>
+        <td>{{Data.patient_name}}</td>
+        <td>{{Data.patient_doctor_reservation}}</td>
+        <td>{{Data.patient_doctor_specialty}}</td>
+        <td>{{Data.patient_doctor_date_time}}</td>
+        <td>{{Data.patient_query}}</td>
+        <td>{{Data.reservation_id}}</td>
+        <td>{{Data.reservation_status}}</td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+</form>
+{% endblock %}

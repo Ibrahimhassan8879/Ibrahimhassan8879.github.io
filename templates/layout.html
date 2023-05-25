@@ -12,36 +12,138 @@
         <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
 
         <!-- https://favicon.io/emoji-favicons/money-bag/ -->
-        <link href="/static/favicon.ico" rel="icon">
+        <link href="/static/hospital.ico" rel="icon">
 
         <link href="/static/styles.css" rel="stylesheet">
+        <link rel="stylesheet" href="static/assets/css/maicons.css">
 
-        <title>C$50 Finance: {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="static/assets/css/bootstrap.css">
+
+        <link rel="stylesheet" href="static/assets/vendor/owl-carousel/css/owl.carousel.css">
+
+        <link rel="stylesheet" href="static/assets/vendor/animate/animate.css">
+
+        <link rel="stylesheet" href="static/assets/css/theme.css">
+
+        <title>Hema General Hospital: {% block title %}{% endblock %}</title>
         <div>{% block div %}{% endblock %}</div>
 
     </head>
 
     <body>
+        <div id="page-container">
+            <div id="content-wrap">
+        <header>
+            <div class="topbar">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-8 text-sm">
+                    <div class="site-info">
+                      <a href="tel:01069689549"><span class="mai-call text-primary"></span> +20 1069 6895 49</a>
+                      <span class="divider">|</span>
+                      <a href="mailto: Ibrahimhassan8879@hotmail.com"><span class="mai-mail text-primary"></span> Ibrahimhassan8879@hotmail.com</a>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 text-right text-sm">
+                    <div class="social-mini-button">
+                      <a href="#"><span class="mai-logo-facebook-f"></span></a>
+                      <a href="#"><span class="mai-logo-twitter"></span></a>
+                      <a href="#"><span class="mai-logo-dribbble"></span></a>
+                      <a href="#"><span class="mai-logo-instagram"></span></a>
+                    </div>
+                  </div>
+                </div> <!-- .row -->
+              </div> <!-- .container -->
+            </div> <!-- .topbar -->
 
         <nav class="bg-light border navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/"><span class="blue">C</span><span class="red">$</span><span class="yellow">5</span><span class="green">0</span> <span class="red">Finance</span></a>
+                <a href="/"><img src="data:image/png;base64,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" alt="Logo"></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
-                    {% if session["user_id"] %}
+                    {% if session['user_id'] in session['user_developer'] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/Developer_access">Developer Access</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Quota">Change Quota</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+                    {% elif session['user_id'] in session['user_admin'] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/modify_staff_accounts">Modify Staff Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/modify_doctors">Modify Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/modify_specialties">Modify Specialties</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Search_Refund">Refund Reservation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/delete_patient">Delete patient account</a></li>
+
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/Messages">Messages</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register_log">Register new patient</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/resetpassword">Reset Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+
+                    {% elif session['user_id'] in session['user_receptionist'] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/patientinformation">Patient information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/our_doctors_patient">Our doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reservation_patient">Reservation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/view_patients_reservation">View Patients Reservation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/get_your_ticket">Get Tickets</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Review_reservated">Review Late Reservations</a></li>
+                    </ul>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/Messages">Messages</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register_log">Register new patient</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/resetpassword">Reset Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+
+                    {% elif session['user_id'] in session['user_nurse'] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/Doctor_clinc">Doctor Clinc</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/Messages">Messages</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/resetpassword">Reset Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+
+                    {% elif session['user_id'] in session['user_accountant'] %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/check_reservations_date">Check Reservations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reviewed_reservations">Reviewed Reservations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Doctors_evaluation">Doctors Evaluation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Unchecked_nurse">Uncheck Nurse Reservation</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/resetpassword">Reset Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+
+                    {% elif session["user_id"] in session['user_patient'] %}
                         <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/quote">Quote</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/buy">Buy</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/sell">Sell</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/our_doctors">Our doctors</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/reservation">Reservation</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/myappointments">My appointments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/get_your_ticket">My Tickets</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/contact_us">About us</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/resetpassword">Reset Password</a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
                         </ul>
+
                     {% else %}
+                        <ul class="navbar-nav me-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/our_doctors">Our doctors</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/contact_us">About us</a></li>
+                        </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
                             <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
@@ -63,10 +165,42 @@
             {% block main %}{% endblock %}
         </main>
 
-        <footer class="mb-5 small text-center text-muted">
-            Data provided by <a href="https://iexcloud.io/">IEX</a>
-        </footer>
+        <footer class="page-footer" id = "footer">
+            <div class="container">
+              <div class="row px-md-3">
+                <div class="col-sm-6 col-lg-3 py-3">
+                  <h5>Company</h5>
+                  <ul class="footer-menu">
+                    <li><a href="/contact_us">About Us</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6 col-lg-3 py-3">
 
+                </div>
+                <div class="col-sm-6 col-lg-3 py-3">
+                </div>
+                <div class="col-sm-6 col-lg-3 py-3">
+                  <h5>Contact</h5>
+                  <p class="footer-link mt-2">PO.BOX 34, 15 Ahmed Abu-soliman st, Alexandria, Egypt</p>
+                  <a href="tel:106-968-9549" class="footer-link">106-968-9549</a>
+                  <a href="mailto:Hema@Hemageneralhospital.com" class="footer-link">Hema@Hemageneralhospital.com</a>
+
+                  <h5 class="mt-3">Social Media</h5>
+                  <div class="footer-sosmed mt-3">
+                    <a href="#" target="_blank"><span class="mai-logo-facebook-f"></span></a>
+                    <a href="#" target="_blank"><span class="mai-logo-twitter"></span></a>
+                    <a href="#" target="_blank"><span class="mai-logo-google-plus-g"></span></a>
+                    <a href="#" target="_blank"><span class="mai-logo-instagram"></span></a>
+                    <a href="#" target="_blank"><span class="mai-logo-linkedin"></span></a>
+                  </div>
+                </div>
+              </div>
+
+              <hr>
+
+              <p id="copyright">Copyrights &#169; 5/25/2023 From Ibrahim Hassan This small website created by Ibrahim Hassan in 4/8/2023 with HTML,CSS,JAVASCRIPT Codes</p>
+            </div>
+          </footer>
     </body>
 
 </html>

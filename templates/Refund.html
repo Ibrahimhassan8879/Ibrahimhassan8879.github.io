@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/Refund" method="POST">
+    <div>
+        Refund Reservations for Accountant {{Accountant_name}}
+    </div>
+        <input type="hidden" name="Date_from" value="{{Date_from}}" class=" mx-auto w-auto">
+        <input type="hidden" name="Date_to" value="{{Date_to}}" class=" mx-auto w-auto">
+        <input type="hidden" name="Accountant_name" value="{{Accountant_name}}" class=" mx-auto w-auto">
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "Refunded_reservation" class="form-control mx-auto w-auto">
+        <option disabled selected >Reservations ID</option>
+        {% for Reservation in reservations_reviewed %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{Reservation.reservation_id}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Refund</button>
+    <p></p>
+    <p>{{message}}</p>
+</form>
+<form>
+<table>
+    <tr>
+        <th>Accountant Name</th>
+        <th>Reservation ID</th>
+        <th>Patient Name</th>
+        <th>Time_stamp</th>
+    </tr>
+    {% for Reservation in reservations_reviewed %}
+    <tr>
+        <td>{{Reservation.accountant_name}}</td>
+        <td>{{Reservation.reservation_id}}</td>
+        <td>{{Reservation.patient_name}}</td>
+        <td>{{Reservation.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</form>
+{% endblock %}

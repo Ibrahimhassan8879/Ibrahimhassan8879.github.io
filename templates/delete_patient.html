@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/delete_patient" method="POST">
+    <div>
+        Patient Account Delete
+    </div>
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "account_name_delete">
+        <option disabled selected >Patient username</option>
+        {% for patient_username in patient_information %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{patient_username.username}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Delete Account</button>
+    <p></p>
+
+    <p>{{message}}</p>
+</form>
+
+
+<table>
+    <tr>
+        <th>Patient ID</th>
+        <th>Patient Name</th>
+        <th>Patient Phone number</th>
+        <th>Patient Age</th>
+        <th>Patient Address</th>
+        <th>Patient Email</th>
+    </tr>
+    {% for patient in patient_information %}
+
+
+    <tr>
+        <td>{{patient.id}}</td>
+        <td>{{patient.username}}</td>
+        <td>{{patient.Phone_number}}</td>
+        <td>{{patient.AGE}}</td>
+        <td>{{patient.ADRESS}}</td>
+        <td>{{patient.Email}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

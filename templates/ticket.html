@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #ticket-image, #print-button {
+            visibility: visible;
+        }
+    }
+</style>
+<form action="/get_your_ticket" method="POST">
+    <div>
+        Get your doctor ticket
+    </div>
+    <p></p>
+    {% if session['user_id'] in session['user_receptionist'] %}
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "patient_name">
+        <option disabled selected >Patient name</option>
+        {% for patient in patient_name %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{patient.patient_name}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "doctor_reservation">
+        <option disabled selected >Doctor name</option>
+        {% for doctor in doctors_reservated %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{doctor.Doctor_name}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    {% endif %}
+    {% if session['user_id'] not in session['user_receptionist'] %}
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "doctor_reservation">
+        <option disabled selected >Doctor name</option>
+        {% for doctor in doctors_reservated %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{doctor.patient_doctor_reservation}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    {% endif %}
+    <p></p>
+    <button type="submit" class="btn btn-primary">Get Ticket</button>
+    <p></p>
+    <p>{{message}}</p>
+</form>
+{% if request.method == 'POST' %}
+<h2>Reservation Ticket</h2>
+<p></p>
+<img id="ticket-image" src="data:image/png;base64,{{ base64_image }}" alt="Reservation Ticket">
+<br>
+<p></p>
+<p></p>
+<a id="download-link" href="data:image/png;base64,{{ base64_image }}" download="reservation_ticket.png">Download</a>
+<button onclick="printImage()" class="btn btn-secondary">Print</button>
+<script>
+    function printImage() {
+        var image = document.getElementById('ticket-image');
+        var printWindow = window.open('', '_blank', 'width=600,height=800');
+        printWindow.document.open();
+        printWindow.document.write('<html><head><title>Print</title></head><body>');
+        printWindow.document.write('<img id="print-image" src="' + image.src + '">');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+
+        printWindow.onload = function() {
+            printWindow.print();
+            printWindow.close();
+        };
+    }
+</script>
+{% endif %}
+
+{% endblock %}

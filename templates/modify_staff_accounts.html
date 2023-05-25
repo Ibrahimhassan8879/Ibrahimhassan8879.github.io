@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Modify staff accounts
+{% endblock %}
+
+{% block main %}
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-12 col-xl-11">
+          <div class="card text-black" style="border-radius: 25px;">
+            <div class="card-body p-md-5">
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Modify/Create Staff Account</p>
+                  <div id="caseselector">
+                    <button onclick="showForm(2)" class="btn btn-primary">Create</button>
+                    <button onclick="showForm(1)" class="btn btn-primary">Modify</button>
+                    <button onclick="showForm(3)" class="btn btn-primary">Delete</button>
+                  </div>
+                  <div class="case" id = "case1">
+                    <p></p>
+                  <form class="mx-1 mx-md-4" action = "/modify_staff_accounts" method = "POST" id="form1" style="display: none;">
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                      <select  class="form-select mx-auto w-auto" name = "account_modified">
+                          <option disabled selected >Staff username</option>
+                          {% for staff in staff_users_name %}
+                          <div class="mb-3">
+                              <option required class="form-select mx-auto w-auto" required>{{staff.username}}</option>
+                          </div>
+                          {% endfor %}
+                      </select>
+                      </div>
+                    </div>
+                    <p>{{message_1}}</p>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_username" type="username" placeholder="Enter new username" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_2}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_email" type="email" placeholder="Enter new Email" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_3}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_phonenumber" type="tel" placeholder="new Phone Number" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_4}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_address" type="Address" placeholder="Enter new Address" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_5}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_age" type="date" placeholder="Enter new AGE" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_6}}</p>
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="submit" class="btn btn-primary">Click here to Modify !</button>
+                    </div>
+                  </form>
+                  </div>
+                  <div class="case" id = "case2">
+                  <form class="mx-1 mx-md-4" action = "/modify_staff_accounts" method = "POST" id="form2" style="display: none;">
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                      <select  class="form-select mx-auto w-auto" name = "account_type">
+                          <option disabled selected >Staff Type</option>
+
+                          <div class="mb-3">
+                              <option required class="form-select mx-auto w-auto" required>Admin</option>
+                              <option required class="form-select mx-auto w-auto" required>Receptionist</option>
+                              <option required class="form-select mx-auto w-auto" required>Nurse</option>
+                              <option required class="form-select mx-auto w-auto" required>Accountant</option>
+                          </div>
+                      </select>
+                      </div>
+                    </div>
+                    <p>{{message_1}}</p>
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_username" type="username" placeholder="Enter new username" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_2}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_email" type="email" placeholder="Enter new Email" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_3}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_phonenumber" type="tel" placeholder="new Phone Number" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_4}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_address" type="Address" placeholder="Enter new Address" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_5}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "new_age" type="date" placeholder="Enter new AGE" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p>{{message_6}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "password" type="password" placeholder = "Enter password" autocomplete ="off" class="form-control mx-auto w-auto" >
+                      </div>
+                    </div>
+                    <p>{{message_7}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                      <div class="form-user flex-fill mb-0">
+                        <input name = "confirmation" type="password" placeholder = "Enter password confirmation" autocomplete ="off" class="form-control mx-auto w-auto" >
+                      </div>
+                    </div>
+                    <p>{{message_8}}</p>
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="submit" class="btn btn-primary">Click here to Create !</button>
+                    </div>
+                    <p>Your Currently Quota: {{Quota.Quota_name}} Subscription </p>
+                    <p>Quota Limit Staff users = {{Quota.Quota_staff_number}}, Quota Limit Patient users = {{Quota.Quota_users_number}}</p>
+                    <p>Contact US to Increase your Quota to get access to more staff users, Patients ! <a href = "">Hemacoding.LLC</a></p>
+                    <p>Note: The Created Staff/Patients more than Quota Limit won't take access to their pages</p>
+                  </form>
+                  <div class="case" id = "case3">
+                    <p></p>
+                  <form class="mx-1 mx-md-4" action = "/modify_staff_accounts" method = "POST" id="form3" style="display: none;">
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                      <select  class="form-select mx-auto w-auto" name = "account_deleted">
+                          <option disabled selected >Staff username</option>
+                          {% for staff in staff_users_name_deleted %}
+                          <div class="mb-3">
+                              <option required class="form-select mx-auto w-auto" required>{{staff.username}}</option>
+                          </div>
+                          {% endfor %}
+                      </select>
+                      </div>
+                    </div>
+                    <p>{{message_1}}</p>
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                      <button type="submit" class="btn btn-primary">Click here to Delete</button>
+                  </div>
+                  </form>
+
+                </div>
+                </div>
+                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                    class="img-fluid" alt="Sample image">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+function showForm(formNumber) {
+  // Hide both forms initially
+  document.getElementById('form1').style.display = 'none';
+  document.getElementById('form2').style.display = 'none';
+  document.getElementById('form3').style.display = 'none';
+
+  // Show the selected form
+  if (formNumber === 1) {
+    document.getElementById('form1').style.display = 'block';
+  } else if (formNumber === 2) {
+    document.getElementById('form2').style.display = 'block';
+  } else if (formNumber === 3) {
+  document.getElementById('form3').style.display = 'block';
+  }
+}
+</script>
+{% endblock %}

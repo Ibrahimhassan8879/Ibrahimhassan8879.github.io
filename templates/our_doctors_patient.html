@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action="/our_doctors_patient" method="POST">
+    <div>
+        Reserve a doctor
+    </div>
+    <p></p>
+        <select  class="form-select mx-auto w-auto" name = "patient_name">
+            <option disabled selected >Patient name</option>
+            {% for patient in patients %}
+            <div class="mb-3">
+                <option required class="form-select mx-auto w-auto" required>{{patient.patient_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+    <p></p>
+        <select class="form-select mx-auto w-auto" name = "doctor_name">
+            <option disabled selected >Doctor name</option>
+            {% for doctor in Doctors %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto" required>{{doctor.Doctor_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+    <p></p>
+        <select class="form-select mx-auto w-auto" name = "doctor_day">
+            <option disabled selected >Day</option>
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">Saturday</option>
+                <option class="form-select mx-auto w-auto">Sunday</option>
+                <option class="form-select mx-auto w-auto">Monday</option>
+                <option class="form-select mx-auto w-auto">Tuesday</option>
+                <option class="form-select mx-auto w-auto">Wednesday</option>
+                <option class="form-select mx-auto w-auto">Thrusday</option>
+                <option class="form-select mx-auto w-auto">Friday</option>
+            </div>
+        </select>
+    <p></p>
+        <button type="submit" class="btn btn-primary">Reserve</button>
+    <p>{{message}}</p>
+    <table>
+        <tr>
+            <th>
+                Doctors name
+            </th>
+            <th>
+                Doctors Specialty
+            </th>
+            <th>
+                Doctor Days Available
+            </th>
+        </tr>
+                {% for doctor in Doctors %}
+        <tr>
+            <td>
+                <div class="mb-3" id="div-{{loop.index}}">
+                    {{doctor.Doctor_name}}
+                </div>
+            </td>
+            <td>
+                <div class="mb-3" name="doctor_specialty">
+                    {{doctor.Doctor_specialty}}
+                </div>
+            </td>
+            <td>
+                <div class="mb-3" name="doctor_specialty">
+                    {{doctor.Days_available}}
+                </div>
+            </td>
+            {% endfor %}
+        </tr>
+</form>
+{% endblock %}

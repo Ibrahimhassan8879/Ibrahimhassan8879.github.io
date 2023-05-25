@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Review Reservations
+{% endblock %}
+
+{% block main %}
+    <form action="/reviewed_reservations" method="POST">
+        <p>Date From</p>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="Date_from" placeholder="Date_from" type="date">
+        </div>
+        <p>Date to</p>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="Date_to" placeholder="Date_to" type="date">
+        </div>
+        <button class="btn btn-primary" type="submit">Review Reservations</button>
+    </form>
+    <p></p>
+    <p>{{message}}</p>
+    <form>
+        <table>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Receptionist Name</th>
+                <th>Nurse Name</th>
+                <th>Doctor Name</th>
+                <th>Patient Name</th>
+                <th>Reservation Price</th>
+                <th>Reviewed Date</th>
+            </tr>
+            {% for reservation in reservations_reviewed %}
+
+
+            <tr>
+                <td>{{reservation.reservation_id}}</td>
+                <td>{{reservation.receptionist_name}}</td>
+                <td>{{reservation.nurse_name}}</td>
+                <td>{{reservation.patient_doctor_reservation}}</td>
+                <td>{{reservation.patient_name}}</td>
+                <td>{{reservation.doctor_price}}.00 $</td>
+                <td>{{reservation.Time_stamp}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Total Reservations Cash</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{Sum_of_reservations_total}}.00 $</td>
+            </tr>
+
+        </table>
+        </form>
+{% endblock %}

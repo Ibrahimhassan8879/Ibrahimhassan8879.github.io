@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}
+Review Reservated
+{% endblock %}
+
+{% block main %}
+<form>
+<table>
+    <tr>
+        <th>Reservation ID</th>
+        <th>patient name</th>
+        <th>patient phone number</th>
+        <th>Doctor name</th>
+        <th>Date of Reservation</th>
+        <th>Status</th>
+        <th>Time</th>
+    </tr>
+    {% for Reservation in Late_Reservations %}
+
+
+    <tr>
+        <td>{{Reservation.reservation_id}}</td>
+        <td>{{Reservation.patient_name}}</td>
+        <td>{{Reservation.patient_phonenumber}}</td>
+        <td>{{Reservation.patient_doctor_reservation}}</td>
+        <td>{{Reservation.patient_doctor_date_time}}</td>
+        <td>{{Reservation.reservation_status}}</td>
+        <td>{{Reservation.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+</form>
+{% endblock %}

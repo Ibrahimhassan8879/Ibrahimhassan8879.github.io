@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Uncheck Reservation
+{% endblock %}
+
+{% block main %}
+    <form action="/Refund" method="GET">
+        <p>Search Reservations</p>
+        <div>Date From</div>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto"  name="Date_from" placeholder="Date_from" type="date">
+        </div>
+        <div>Date to</div>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto"  name="Date_to" placeholder="Date_to" type="date">
+        </div>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "Accountant_name" class="form-control mx-auto w-auto">
+            <option disabled selected >Accountant name</option>
+            {% for Accountant in Accountants_name %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">{{Accountant.username}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <button class="btn btn-primary" type="submit">Search Reservations</button>
+    </form>
+    <p></p>
+    <p>{{message}}</p>
+
+{% endblock %}

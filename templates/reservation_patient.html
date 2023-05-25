@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}
+Reservation
+{% endblock %}
+
+{% block main %}
+    <form action="/reservation_patient" method="POST">
+        <div>
+            Reserve a doctor
+        </div>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "doctor_specialty">
+            <option disabled selected >Doctor Specialty</option>
+            {% for doctor in Doctors %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">{{doctor.Doctors_specialty}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "doctor_day">
+            <option disabled selected >Day</option>
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">Saturday</option>
+                <option class="form-select mx-auto w-auto">Sunday</option>
+                <option class="form-select mx-auto w-auto">Monday</option>
+                <option class="form-select mx-auto w-auto">Tuesday</option>
+                <option class="form-select mx-auto w-auto">Wednesday</option>
+                <option class="form-select mx-auto w-auto">Thrusday</option>
+                <option class="form-select mx-auto w-auto">Friday</option>
+            </div>
+        </select>
+        <p></p>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <p>{{message}}</p>
+    </form>
+
+    {% endblock %}

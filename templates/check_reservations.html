@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Review Reservations
+{% endblock %}
+
+{% block main %}
+    <form action="/review_reservations" method="GET">
+        <div>Date From</div>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto"  name="Date_from" placeholder="Date_from" type="date">
+        </div>
+        <div>Date to</div>
+        <p></p>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto"  name="Date_to" placeholder="Date_to" type="date">
+        </div>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "Doctor_name" class="form-control mx-auto w-auto">
+            <option disabled selected >Doctor name</option>
+            {% for Doctor in Doctors_name %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">{{Doctor.Doctor_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "Receptionist_name" class="form-control mx-auto w-auto">
+            <option disabled selected >Receptionist name</option>
+            {% for Receptionist in Receptionists_name %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">{{Receptionist.username}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <select class="form-select mx-auto w-auto" name = "Nurse_name" class="form-control mx-auto w-auto">
+            <option disabled selected >Nurse name</option>
+            {% for Nurse in Nurses_name %}
+            <div class="mb-3">
+                <option class="form-select mx-auto w-auto">{{Nurse.username}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <button class="btn btn-primary" type="submit">Review Reservations</button>
+    </form>
+    <p></p>
+    <p>{{message}}</p>
+
+{% endblock %}

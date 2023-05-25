@@ -1,0 +1,195 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<style>
+    .case
+    {
+        display:none;
+    }
+</style>
+<h1>Select the modification</h1>
+
+<div id="caseselector">
+    <button onclick="showCase(1)" class="btn btn-primary">Add new doctor</button>
+    <button onclick="showCase(2)" class="btn btn-primary">Remove doctor</button>
+    <button onclick="showCase(3)" class="btn btn-primary">Modify Doctor days</button>
+    <button onclick="showCase(4)" class="btn btn-primary">Modify Doctor Price</button>
+</div>
+
+<div class="case" id = "case1">
+<form action="/modify_doctors" method="POST">
+    <p></p>
+    <div>Add new doctor</div>
+            <p></p>
+            <div class="mb-3">
+                <input  name ="Doctor_name" placeholder="Doctor name" autocomplete="off" class="form-control mx-auto w-auto" required>
+            </div>
+
+        <select class="form-control mx-auto w-auto" name ="Doctor_specialty">
+            <div class="mb-3">
+                <option  selected disabled class="form-control mx-auto w-auto">Select Specialty</option>
+            </div>
+        {% for specialty in Doctors_specialty %}
+            <div class="mb-3">
+                <option  name="Doctor_specialty"  class="form-control mx-auto w-auto">{{specialty.Doctors_specialty}}</option>
+            </div>
+        {% endfor %}
+        </select>
+        <p></p>
+            <div class="mb-3">
+                <input  name ="Days_available" placeholder="Days Available Day / Day" autocomplete="off"  class="form-control mx-auto w-auto" required>
+            </div>
+        <p></p>
+        <div class="mb-3">
+            <input  name ="Doctor_price" placeholder="Reservation Price" autocomplete="off"  class="form-control mx-auto w-auto" required>
+        </div>
+        <p></p>
+            <div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+            <p></p>
+            <div class ="color:green">{{message_1}}</div>
+            <div class ="color:red">{{message_2}}</div>
+            <p></p>
+</form>
+</div>
+<div class="case" id="case2">
+<form action = "/modify_doctors" method = "POST">
+    <p></p>
+    <div>Remove doctor</div>
+    <p></p>
+        <select class="form-control mx-auto w-auto" name ="Doctor_removed">
+            <div class="mb-3">
+                <option  disabled selected  class="form-control mx-auto w-auto">Select Doctor to remove</option>
+            </div>
+            {% for Doctor in Doctors_available %}
+            <div class="mb-3">
+                <option autocomplete="off"  class="form-control mx-auto w-auto">{{Doctor.Doctor_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <div>
+            <button type="submit" class="btn btn-primary">Remove</button>
+        </div>
+        <p></p>
+        <div class ="color:green">{{message_3}}</div>
+        <div class ="color:red">{{message_4}}</div>
+        <p></p>
+</form>
+</div>
+<div class="case" id="case3">
+<form action = "/modify_doctors" method = "POST">
+    <p></p>
+    <div>Modify Doctor days</div>
+    <p></p>
+        <select class="form-control mx-auto w-auto" name ="Doctor_day_modified">
+            <div class="mb-3">
+                <option  disabled selected  class="form-control mx-auto w-auto">Select Doctor to modify</option>
+            </div>
+            {% for Doctor in Doctors_available %}
+            <div class="mb-3">
+                <option autocomplete="off"  class="form-control mx-auto w-auto">{{Doctor.Doctor_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <div class="mb-3">
+            <input  name ="Doctor_new_days" placeholder="New days" autocomplete="off"  class="form-control mx-auto w-auto" required>
+        </div>
+        <p></p>
+        <div>
+            <button type="submit" class="btn btn-primary">Modify</button>
+        </div>
+        <p></p>
+        <div class ="color:green">{{message_5}}</div>
+        <div class ="color:red">{{message_6}}</div>
+        <p></p>
+</form>
+</div>
+<div class="case" id="case4">
+<form action = "/modify_doctors" method = "POST">
+    <p></p>
+    <div>Modify Doctor Price</div>
+    <p></p>
+        <select class="form-control mx-auto w-auto" name ="Doctor_price_modified">
+            <div class="mb-3">
+                <option  disabled selected  class="form-control mx-auto w-auto">Select Doctor to modify</option>
+            </div>
+            {% for Doctor in Doctors_available %}
+            <div class="mb-3">
+                <option autocomplete="off"  class="form-control mx-auto w-auto">{{Doctor.Doctor_name}}</option>
+            </div>
+            {% endfor %}
+        </select>
+        <p></p>
+        <div class="mb-3">
+            <input  name ="Doctor_new_price" placeholder="New Price" autocomplete="off"  class="form-control mx-auto w-auto" required>
+        </div>
+        <p></p>
+        <div>
+            <button type="submit" class="btn btn-primary">Modify</button>
+        </div>
+        <p></p>
+        <div class ="color:green">{{message_7}}</div>
+        <div class ="color:red">{{message_8}}</div>
+        <p></p>
+</form>
+</div>
+<p></p>
+<table>
+    <tr>
+        <th>
+            Doctors name
+        </th>
+        <th>
+            Doctors Specialty
+        </th>
+        <th>
+            Doctor Days Available
+        </th>
+        <th>
+            Doctor Price
+        </th>
+    </tr>
+            {% for doctor in Doctors_available %}
+    <tr>
+        <td>
+            <div class="mb-3" id="div-{{loop.index}}">
+                {{doctor.Doctor_name}}
+            </div>
+        </td>
+        <td>
+            <div class="mb-3" name="doctor_specialty">
+                {{doctor.Doctor_specialty}}
+            </div>
+        </td>
+        <td>
+            <div class="mb-3" name="doctor_specialty">
+                {{doctor.Days_available}}
+            </div>
+        </td>
+        <td>
+            <div class="mb-3" name="doctor_specialty">
+                {{doctor.Doctor_price}}.00 $
+            </div>
+        </td>
+        {% endfor %}
+    </tr>
+</table>
+<script>
+    function showCase(caseNumber)
+    {
+        var cases = document.getElementsByClassName('case');
+        for (var i = 0; i < cases.length; i++)
+        {
+        cases[i].style.display = 'none';
+        }
+    var selectedCase = document.getElementById('case' + caseNumber);
+    selectedCase.style.display = 'block';
+    }
+</script>
+{% endblock %}

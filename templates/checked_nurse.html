@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/checked_nurse" method="POST">
+    <div>
+        Check Reservations for Nurse {{Nurse_name}}
+    </div>
+        <input type="hidden" name="Date_from" value="{{Date_from}}" class=" mx-auto w-auto">
+        <input type="hidden" name="Date_to" value="{{Date_to}}" class=" mx-auto w-auto">
+        <input type="hidden" name="Nurse_name" value="{{Nurse_name}}" class=" mx-auto w-auto">
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "Reservation_id" class="form-control mx-auto w-auto">
+        <option disabled selected >Doctor Queue</option>
+        {% for Reservation in Reservations %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{Reservation.reservation_id}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Uncheck</button>
+    <p></p>
+    <p>{{message}}</p>
+</form>
+<form>
+<table>
+    <tr>
+        <th>Nurse Name</th>
+        <th>Reservation ID</th>
+        <th>Patient Name</th>
+        <th>Time_stamp</th>
+    </tr>
+    {% for Reservation in Reservations %}
+    <tr>
+        <td>{{Reservation.nurse_name}}</td>
+        <td>{{Reservation.reservation_id}}</td>
+        <td>{{Reservation.patient_name}}</td>
+        <td>{{Reservation.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</form>
+{% endblock %}

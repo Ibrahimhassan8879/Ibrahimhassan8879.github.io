@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<style>
+    .case
+    {
+        display:none;
+    }
+</style>
+<h1>Messages</h1>
+<p></p>
+<div id="caseselector">
+    <button onclick="showCase(1)" class="btn btn-primary">View Messages</button>
+    <button onclick="showCase(2)" class="btn btn-primary">Make Message</button>
+    <button onclick="showCase(3)" class="btn btn-primary">Your Messages</button>
+</div>
+
+<div class="case" id = "case1">
+<p></p>
+<form action="/Messages" method="GET">
+    <table>
+        <tr>
+            <th>Message FROM</th>
+            <th>Message Content</th>
+            <th>Message DATE</th>
+        </tr>
+        {% for message in Your_messages %}
+        <tr>
+            <td>{{message.Message_from}}</td>
+            <td>{{message.Message_content}}</td>
+            <td>{{message.Message_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+        <p></p>
+</form>
+</div>
+<div class="case" id = "case2">
+<form action = "/Messages" method = "POST">
+    <p></p>
+    <select class="form-control mx-auto w-auto" name ="Message_to">
+        <div class="mb-3">
+            <option  selected disabled class="form-control mx-auto w-auto">Select Staff Member to send</option>
+        </div>
+    {% for staff in staff_accounts_name %}
+        <div class="mb-3">
+            <option  name="Message_to"  class="form-control mx-auto w-auto">{{staff.username}}</option>
+        </div>
+    {% endfor %}
+    </select>
+    <p></p>
+    <div class="mb-3">
+        <textarea type="text" name = "Message_content" placeholder="Message content" autocomplete="off" class="form-control"></textarea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </div>
+    <p>{{message}}</p>
+</form>
+
+</div>
+<div class="case" id = "case3">
+    <form action="/modify_doctors" method="POST">
+        <p></p>
+        <table>
+            <tr>
+                <th>Message TO</th>
+                <th>Message Content</th>
+                <th>Message DATE</th>
+            </tr>
+            {% for message in sended_messages %}
+            <tr>
+                <td>{{message.Message_to}}</td>
+                <td>{{message.Message_content}}</td>
+                <td>{{message.Message_date}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+            <p></p>
+    </form>
+    </div>
+<script>
+    function showCase(caseNumber)
+    {
+        var cases = document.getElementsByClassName('case');
+        for (var i = 0; i < cases.length; i++)
+        {
+        cases[i].style.display = 'none';
+        }
+    var selectedCase = document.getElementById('case' + caseNumber);
+    selectedCase.style.display = 'block';
+    }
+</script>
+{% endblock %}

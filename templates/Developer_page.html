@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Terminal
+{% endblock %}
+
+{% block main %}
+<style>
+    #terminal {
+        width: 800px;
+        height: 400px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        overflow-y: scroll;
+    }
+    table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+</style>
+<h1>Developer Page</h1>
+
+<p></p>
+<form method="POST" action="/Developer_page">
+    <input type="text" name="Terminal" placeholder="Enter terminal command" class="form-control mx-auto w-auto">
+    <p></p>
+    <input type="submit" value="Submit" class="btn btn-primary">
+
+</form>
+
+<h2>Output:</h2>
+{% if output %}
+    <table>
+        <thead>
+            <tr>
+                {% for column_name in columns %}
+                    <th>{{ column_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in output %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

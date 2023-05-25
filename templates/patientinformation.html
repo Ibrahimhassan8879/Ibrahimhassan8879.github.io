@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/patientinformation" method="POST">
+    <div>
+        Patient Search
+    </div>
+    <p></p>
+    <div class="mb-3">
+        <input type="name" name = "patient_name" placeholder="Patient name" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="tel" name = "patient_phonenumber" placeholder="Patient phonenumber" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="age" name = "patient_age" placeholder="Patient age" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+
+    <p>{{message}}</p>
+</form>
+
+<form action ="/patientinformation" method="POST">
+    <div>
+        Cancel appointment
+    </div>
+    <p></p>
+    <div class ="mb-3">
+        <div>
+            <input type="name" name="patient_name" placeholder="Patient name" autocomplete="off" class="form-control mx-auto w-auto">
+        </div>
+        <p></p>
+        <select name = "cancel_appointment" class="form-select mx-auto w-auto">
+            <option disabled selected>Doctor name</option>
+            {% for Doctor_name in patient_appointments %}
+                <option class="form-select mx-auto w-auto">{{Doctor_name.patient_doctor_reservation}}</option>
+            {% endfor %}
+        </select>
+        <p></p>
+            <button type="submit" class="btn btn-primary">Cancel Appointment</button>
+        <p></p>
+        <p>{{message}}</p>
+    </div>
+</form>
+
+<table>
+    {% for patient in patient_data %}
+    <tr>
+        <td>Patient ID</td>
+        <td>{{patient.patient_id}}</td>
+    </tr>
+    <tr>
+        <td>Patient Name</td>
+        <td>{{patient.patient_name}}</td>
+    </tr>
+    <tr>
+        <td>Patient Age</td>
+        <td>{{patient.patient_age}}</td>
+    </tr>
+    <tr>
+        <td>Patient Phone number</td>
+        <td>{{patient.patient_phonenumber}}</td>
+    </tr>
+    <tr>
+        <td>Patient Address</td>
+        <td>{{patient.patient_adress}}</td>
+    </tr>
+    <tr>
+        <td>Patient Email</td>
+        <td>{{patient.patient_Email}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<table>
+    <tr>
+        <th>Doctor name</th>
+        <th>Specialty</th>
+        <th>Date</th>
+        <th>Reservation ID</th>
+        <th>Queue</th>
+        <th>Time executed</th>
+    </tr>
+    {% for patient in patient_appointments %}
+
+
+    <tr>
+        <td>{{patient.patient_doctor_reservation}}</td>
+        <td>{{patient.patient_doctor_specialty}}</td>
+        <td>{{patient.patient_doctor_date_time}}</td>
+        <td>{{patient.reservation_id}}</td>
+        <td>{{patient.patient_query}}</td>
+        <td>{{patient.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

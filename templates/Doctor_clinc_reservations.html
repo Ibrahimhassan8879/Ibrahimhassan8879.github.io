@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}
+Query
+{% endblock %}
+
+{% block main %}
+<form action ="/Doctor_clinc_reservations" method="POST">
+    <div>
+        Check Patient for Doctor {{Doctor_clinc}} {{day}}
+    </div>
+
+    <input type="hidden" name="Doctor_clinc" value="{{Doctor_clinc}}" class=" mx-auto w-auto">
+    <input type="hidden" name="day" value="{{day}}" class=" mx-auto w-auto">
+    <p></p>
+    <select class="form-select mx-auto w-auto" name = "patient_query" class="form-control mx-auto w-auto">
+        <option disabled selected >Doctor Queue</option>
+        {% for doctor in Doctors %}
+        <div class="mb-3">
+            <option class="form-select mx-auto w-auto">{{doctor.patient_query}}</option>
+        </div>
+        {% endfor %}
+    </select>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Check</button>
+    <p></p>
+</form>
+<p>Important Note: Contact Administrator if you have misclicked on doctor check list</p>
+<form>
+<table>
+    <tr>
+        <th>Patient Name</th>
+        <th>Queue</th>
+        <th>Reservation_id</th>
+    </tr>
+    {% for Data in Doctors %}
+
+
+    <tr>
+        <td>{{Data.patient_name}}</td>
+        <td>{{Data.patient_query}}</td>
+        <td>{{Data.reservation_id}}</td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+</form>
+{% endblock %}

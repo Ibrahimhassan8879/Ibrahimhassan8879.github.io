@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}
+Home page
+{% endblock %}
+
+{% block main %}
+<form>
+<table>
+    <tr>
+        <th>Doctor name</th>
+        <th>Specialty</th>
+        <th>Date</th>
+        <th>Queue</th>
+        <th>Reservation_ID</th>
+        <th>Time</th>
+    </tr>
+    {% for Doctor in Doctors %}
+
+
+    <tr>
+        <td>{{Doctor.Doctor_name}}</td>
+        <td>{{Doctor.Doctor_specialty}}</td>
+        <td>{{Doctor.patient_doctor_date_time}}</td>
+        <td>{{Doctor.patient_query}}</td>
+        <td>{{Doctor.reservation_id}}</td>
+        <td>{{Doctor.Time_stamp}}</td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+</form>
+{% endblock %}
