@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Our Doctors
 {% endblock %}
 
 {% block main %}
@@ -41,7 +41,10 @@ Query
         </select>
     <p></p>
         <button type="submit" class="btn btn-primary">Reserve</button>
-    <p>{{message}}</p>
+        <p></p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
+    <p></p>
     <table>
         <tr>
             <th>
@@ -54,7 +57,7 @@ Query
                 Doctor Days Available
             </th>
         </tr>
-                {% for doctor in Doctors %}
+        {% for doctor in Doctors %}
         <tr>
             <td>
                 <div class="mb-3" id="div-{{loop.index}}">

@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 
 {% block title %}
-    Uncheck Reservation
+Search Refund
 {% endblock %}
 
 {% block main %}
@@ -30,6 +30,7 @@
         <button class="btn btn-primary" type="submit">Search Reservations</button>
     </form>
     <p></p>
-    <p>{{message}}</p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
 
 {% endblock %}

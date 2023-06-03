@@ -1,8 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Reservation
+Doctor Clinc
 {% endblock %}
-
 {% block main %}
     <form action="/Doctor_clinc" method="POST">
         <div>
@@ -37,7 +36,7 @@ Reservation
         <p></p>
         <button type="submit" class="btn btn-primary">Search</button>
         <p></p>
-        <p>{{message}}</p>
+        <p style="color:red;">{{message_1}}</p>
     </form>
 
     {% endblock %}

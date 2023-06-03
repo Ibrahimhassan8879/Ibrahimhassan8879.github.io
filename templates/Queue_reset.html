@@ -1,0 +1,21 @@
+{% extends "layout_2.html" %}
+{% block title %}
+Queue Reset
+{% endblock %}
+
+{% block main %}
+
+<form action="/Queue_reset" method="POST">
+    <div>
+        Reset Doctors Queue
+    </div>
+    <p></p>
+    <button type="submit" class="btn btn-primary">Reset Queue</button>
+    <p></p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
+    <p></p>
+</form>
+
+
+{% endblock %}

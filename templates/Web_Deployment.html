@@ -1,0 +1,48 @@
+{% extends "layout_2.html" %}
+
+{% block title %}
+   Web Deployment
+{% endblock %}
+
+{% block main %}
+<style>
+    #terminal {
+        width: 800px;
+        height: 400px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        overflow-y: scroll;
+    }
+    table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+</style>
+<h1>Developer Page</h1>
+
+<p></p>
+<form method="POST" action="/Web_Deployment">
+    <div>
+        Input Files Location
+    </div>
+    <p></p>
+    <input class="form-select mx-auto w-auto" name = "New_location" type="text">
+    <p></p>
+    <button type="submit" class="btn btn-primary">Deploy new Location</button>
+    <p></p>
+</form>
+<p></p>
+<div style="color:red;">{{message_1}}</div>
+<div style="color:green;">{{message_2}}</div>
+<p></p>
+    <p> Currently Location: {{Current_location}}</p>
+    <P> Important Note: After any change on Location Restart the Server to make the new Location effect</P>
+{% endblock %}

@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Patient Information
 {% endblock %}
 
 {% block main %}
@@ -44,7 +44,9 @@ Query
         <p></p>
             <button type="submit" class="btn btn-primary">Cancel Appointment</button>
         <p></p>
-        <p>{{message}}</p>
+        <p style="color:red;">{{message_1}}</p>
+        <p style="color:green;">{{message_2}}</p>
+        <p></p>
     </div>
 </form>
 
@@ -76,6 +78,7 @@ Query
     </tr>
     {% endfor %}
 </table>
+
 <table>
     <tr>
         <th>Doctor name</th>
@@ -86,8 +89,6 @@ Query
         <th>Time executed</th>
     </tr>
     {% for patient in patient_appointments %}
-
-
     <tr>
         <td>{{patient.patient_doctor_reservation}}</td>
         <td>{{patient.patient_doctor_specialty}}</td>
@@ -95,6 +96,7 @@ Query
         <td>{{patient.reservation_id}}</td>
         <td>{{patient.patient_query}}</td>
         <td>{{patient.Time_stamp}}</td>
+        <td>{{patient.reservation_status}}</td>
     </tr>
     {% endfor %}
 </table>

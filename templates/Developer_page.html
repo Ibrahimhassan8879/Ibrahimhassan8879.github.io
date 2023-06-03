@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 
 {% block title %}
     Terminal
@@ -27,7 +27,8 @@
         }
 </style>
 <h1>Developer Page</h1>
-
+<p></p>
+<img src="static\SQL_TABLE\SQL_MAP_Cloud.jpg">
 <p></p>
 <form method="POST" action="/Developer_page">
     <input type="text" name="Terminal" placeholder="Enter terminal command" class="form-control mx-auto w-auto">
@@ -56,5 +57,7 @@
             {% endfor %}
         </tbody>
     </table>
+    <p></p>
 {% endif %}
+<p></p>
 {% endblock %}

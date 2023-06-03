@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Messages
 {% endblock %}
 
 {% block main %}
@@ -17,7 +17,10 @@ Query
     <button onclick="showCase(2)" class="btn btn-primary">Make Message</button>
     <button onclick="showCase(3)" class="btn btn-primary">Your Messages</button>
 </div>
-
+<p></p>
+<p style="color:red;">{{message_1}}</p>
+<p style="color:green;">{{message_2}}</p>
+<p></p>
 <div class="case" id = "case1">
 <p></p>
 <form action="/Messages" method="GET">
@@ -58,7 +61,6 @@ Query
     <div>
         <button type="submit" class="btn btn-primary">Send Message</button>
     </div>
-    <p>{{message}}</p>
 </form>
 
 </div>

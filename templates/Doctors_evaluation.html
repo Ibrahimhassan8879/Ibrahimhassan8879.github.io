@@ -1,9 +1,7 @@
-{% extends "layout.html" %}
-
+{% extends "layout_2.html" %}
 {% block title %}
-    Review Reservations
+Doctors Evaluation
 {% endblock %}
-
 {% block main %}
     <form action="/Doctors_evaluation" method="POST">
         <p>Date From</p>
@@ -19,7 +17,7 @@
         <button class="btn btn-primary" type="submit">Review Reservations</button>
     </form>
     <p></p>
-    <p>{{message}}</p>
+    <p style="color:red;">{{message_1}}</p>
     <form>
         <p></p>
         <table>

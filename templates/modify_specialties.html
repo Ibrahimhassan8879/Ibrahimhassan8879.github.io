@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Modify Specialities
 {% endblock %}
 
 {% block main %}
@@ -16,7 +16,10 @@ Query
     <button onclick="showCase(1)" class="btn btn-primary">Remove</button>
     <button onclick="showCase(2)" class="btn btn-primary">Add</button>
 </div>
-
+<p></p>
+<p style="color:red;">{{message_1}}</p>
+<p style="color:green;">{{message_2}}</p>
+<p></p>
 <div class="case" id = "case1">
 <p></p>
 <form action="/modify_specialties" method="POST">
@@ -49,7 +52,6 @@ Query
     <div>
         <button type="submit" class="btn btn-primary">Add Specialty</button>
     </div>
-    <p>{{message}}</p>
 </form>
 </div>
 <script>

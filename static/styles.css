@@ -51,12 +51,23 @@ table:nth-child(even){
   }
 
   #content-wrap {
-    padding-bottom: 50rem;    /* Footer height */
+    padding-bottom: 30rem;    /* Footer height */
   }
 
   #footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 30rem;            /* Footer height */
+    height: 32rem;            /* Footer height */
   }
+
+
+  .doctor-card {
+    display: flex;
+    border: 3px solid grey;
+    padding: 10px;
+    /* Set the desired width and height */
+    width: 900px;
+    height: 250px;
+  }
+

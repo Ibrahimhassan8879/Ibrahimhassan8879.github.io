@@ -39,17 +39,17 @@
                 <div class="row">
                   <div class="col-sm-8 text-sm">
                     <div class="site-info">
-                      <a href="tel:{{Phone_number}}"><span class="mai-call text-primary"></span>{{Phone_number}}</a>
-                      <span class="divider">|</span>
-                      <a href="mailto: {{Email}}"><span class="mai-mail text-primary"></span>{{Email}}</a>
+                        <a href="tel:{{Phone_number}}"><span class="mai-call text-primary"></span>{{Phone_number}}</a>
+                        <span class="divider">|</span>
+                        <a href="mailto: {{Email}}"><span class="mai-mail text-primary"></span>{{Email}}</a>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-sm-4 text-right text-sm">
-                    <div class="social-mini-button">
-                      <a href="{{Fb_page}}"><span class="mai-logo-facebook-f"></span></a>
-                      <a href="{{Tw_page}}"><span class="mai-logo-twitter"></span></a>
-                      <a href="{{Inst_page}}"><span class="mai-logo-instagram"></span></a>
-                      <a href="{{Linked_page}}"><span class="mai-logo-linkedin"></span></a>
+                    <div class="col-sm-4 text-right text-sm">
+                      <div class="social-mini-button">
+                        <a href="{{Fb_page}}"><span class="mai-logo-facebook-f"></span></a>
+                        <a href="{{Tw_page}}"><span class="mai-logo-twitter"></span></a>
+                        <a href="{{Inst_page}}"><span class="mai-logo-instagram"></span></a>
+                        <a href="{{Linked_page}}"><span class="mai-logo-linkedin"></span></a>
                     </div>
                   </div>
                 </div> <!-- .row -->
@@ -164,67 +164,12 @@
                 </div>
             </header>
         {% endif %}
+
         <main class="container-fluid py-5 text-center">
-            <div class="page-hero bg-image overlay-dark" style="background-image: url(static/assets/img/bg_image_1.jpg);">
-				<div class="hero-section">
-				  <div class="container text-center wow zoomIn">
-					<span class="subhead">Let's make your life happier</span>
-					<h1 class="display-4">Healthy Living</h1>
-				  </div>
-				</div>
-			  </div>
-			  <div class="bg-light">
-				<div class="page-section py-3 mt-md-n5 custom-index">
-				  <div class="container">
-					<div class="row justify-content-center">
-					  <div class="col-md-4 py-3 py-md-0">
-						<div class="card-service wow fadeInUp">
-						  <div class="circle-shape bg-secondary text-white">
-							<span class="mai-chatbubbles-outline"></span>
-						  </div>
-						  <p><span>Chat</span> with a doctors</p>
-						</div>
-					  </div>
-					  <div class="col-md-4 py-3 py-md-0">
-						<div class="card-service wow fadeInUp">
-						  <div class="circle-shape bg-primary text-white">
-							<span class="mai-shield-checkmark"></span>
-						  </div>
-						  <p><span>One</span>-Health Protection</p>
-						</div>
-					  </div>
-					  <div class="col-md-4 py-3 py-md-0">
-						<div class="card-service wow fadeInUp">
-						  <div class="circle-shape bg-accent text-white">
-							<span class="mai-basket"></span>
-						  </div>
-						  <p><span>One</span>-Health Pharmacy</p>
-						</div>
-					  </div>
-					</div>
-				  </div>
-				</div> <!-- .page-section -->
             {% block main %}{% endblock %}
-            <p></p>
-            <p></p>
-            <div class="page-section banner-home bg-image" style="background-image: url(static/assets/img/banner-pattern.svg);">
-                <div class="container py-5 py-lg-0">
-                  <div class="row align-items-center">
-                    <div class="col-lg-4 wow zoomIn">
-                      <div class="img-banner d-none d-lg-block">
-                        <img src="static/assets/img/mobile_app.png" alt="">
-                      </div>
-                    </div>
-                    <div class="col-lg-8 wow fadeInRight">
-                      <h1 class="font-weight-normal mb-3">Get easy access of all features using One Health Application</h1>
-                      <a href="#"><img src="static/assets/img/google_play.svg" alt=""></a>
-                      <a href="#" class="ml-2"><img src="static/assets/img/app_store.svg" alt=""></a>
-                    </div>
-                  </div>
-                </div>
-              </div> <!-- .banner-home -->
-  </section>
+        <p></p>
         </main>
+        <p></p>
         <footer class="page-footer" id = "footer">
             <div class="container">
               <div class="row px-md-3">
@@ -240,17 +185,17 @@
                 <div class="col-sm-6 col-lg-3 py-3">
                 </div>
                 <div class="col-sm-6 col-lg-3 py-3">
-                  <h5>Contact</h5>
-                  <p class="footer-link mt-2">{{Address}}</p>
-                  <a href="tel:{{Phone_number}}" class="footer-link">{{Phone_number}}</a>
-                  <a href="mailto:{{Email}}" class="footer-link">{{Email}}</a>
+                    <h5>Contact</h5>
+                    <p class="footer-link mt-2">{{Address}}</p>
+                    <a href="tel:{{Phone_number}}" class="footer-link">{{Phone_number}}</a>
+                    <a href="mailto:{{Email}}" class="footer-link">{{Email}}</a>
 
-                  <h5 class="mt-3">Social Media</h5>
-                  <div class="footer-sosmed mt-3">
-                    <a href="{{Fb_page}}" target="_blank"><span class="mai-logo-facebook-f"></span></a>
-                    <a href="{{Tw_page}}" target="_blank"><span class="mai-logo-twitter"></span></a>
-                    <a href="{{Inst_page}}" target="_blank"><span class="mai-logo-instagram"></span></a>
-                    <a href="{{Linked_page}}" target="_blank"><span class="mai-logo-linkedin"></span></a>
+                    <h5 class="mt-3">Social Media</h5>
+                    <div class="footer-sosmed mt-3">
+                      <a href="{{Fb_page}}" target="_blank"><span class="mai-logo-facebook-f"></span></a>
+                      <a href="{{Tw_page}}" target="_blank"><span class="mai-logo-twitter"></span></a>
+                      <a href="{{Inst_page}}" target="_blank"><span class="mai-logo-instagram"></span></a>
+                      <a href="{{Linked_page}}" target="_blank"><span class="mai-logo-linkedin"></span></a>
                   </div>
                 </div>
               </div>

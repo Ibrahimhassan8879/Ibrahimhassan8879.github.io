@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Doctor Clinc Reservations
 {% endblock %}
 
 {% block main %}
@@ -22,6 +22,9 @@ Query
     </select>
     <p></p>
     <button type="submit" class="btn btn-primary">Check</button>
+    <p></p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
     <p></p>
 </form>
 <p>Important Note: Contact Administrator if you have misclicked on doctor check list</p>

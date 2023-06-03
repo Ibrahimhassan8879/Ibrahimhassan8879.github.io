@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 
 {% block title %}
-Register !
+Register New Patient
 {% endblock %}
 
 {% block main %}
@@ -21,57 +21,73 @@ Register !
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
+                        <input name = "Firstname" type="text" placeholder="First Name" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p style="color:red;">{{message_8}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <input name = "Lastname" type="text" placeholder="Last Name" autocomplete ="off" class="form-control" >
+                      </div>
+                    </div>
+                    <p style="color:red;">{{message_9}}</p>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
                         <input name = "username" type="username" placeholder="Enter username" autocomplete ="off" class="form-control" >
                       </div>
                     </div>
-                    <p>{{message_1}}</p>
+                    <p style="color:red;">{{message_1}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input name = "Email" type="email" placeholder="Enter you Email" autocomplete ="off" class="form-control" >
                       </div>
                     </div>
-                    <p>{{message_2}}</p>
+                    <p style="color:red;">{{message_2}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input name = "Phone_number" type="tel" placeholder="Phone Number" autocomplete ="off" class="form-control" >
                       </div>
                     </div>
-                    <p>{{message_3}}</p>
+                    <p style="color:red;">{{message_3}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input name = "Address" type="Address" placeholder="Enter Address" autocomplete ="off" class="form-control" >
                       </div>
                     </div>
-                    <p>{{message_4}}</p>
+                    <p style="color:red;">{{message_4}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input name = "AGE" type="date" placeholder="Enter you AGE" autocomplete ="off" class="form-control" >
                       </div>
                     </div>
-                    <p>{{message_5}}</p>
+                    <p style="color:red;">{{message_5}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input name = "password" type="password" placeholder = "Enter password" autocomplete ="off" class="form-control mx-auto w-auto" >
                       </div>
                     </div>
-                    <p>{{message_6}}</p>
+                    <p style="color:red;">{{message_6}}</p>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                       <div class="form-user flex-fill mb-0">
                         <input name = "confirmation" type="password" placeholder = "Enter password confirmation" autocomplete ="off" class="form-control mx-auto w-auto" >
                       </div>
                     </div>
-                    <p>{{message_7}}</p>
+                    <p style="color:red;">{{message_7}}</p>
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                         <button type="submit" class="btn btn-primary">Click here to Register !</button>
                     </div>
                   </form>
-
+                  <p></p>
+                  <div style="color:green;">{{message_10}}</div>
+                  <p></p>
                 </div>
                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 

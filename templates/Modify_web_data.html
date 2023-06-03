@@ -1,0 +1,40 @@
+{% extends "layout_2.html" %}
+{% block title %}
+Modify Web Data
+{% endblock %}
+
+{% block main %}
+<form action ="/Modify_web_data" method="POST">
+    <div>
+        Web Data
+    </div>
+    <p></p>
+    <div class="mb-3">
+        <input type="tel" name = "Phone_number" placeholder="Web Phone Number" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="Address" name = "Address" placeholder="Web Address" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="email" name = "Email" placeholder="Web Email" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="text" name = "Fb_page" placeholder="Web Link Facebook page" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="text" name = "Tw_page" placeholder="Web Link Twitter page" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="text" name = "Inst_page" placeholder="Web Link Instagram page" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div class="mb-3">
+        <input type="text" name = "Linked_page" placeholder="Web Link Linkedin page" autocomplete="off" class="form-control mx-auto w-auto">
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+    <p></p>
+    <p style="color:green;">{{message_2}}</p>
+    <p></p>
+</form>
+{% endblock %}

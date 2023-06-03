@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 
 {% block title %}
-    Terminal
+    Quota
 {% endblock %}
 
 {% block main %}
@@ -59,7 +59,7 @@
     <p></p>
 </form>
 <p></p>
-    <p>{{message_1}}{{message_2}}</p>
+    <p><div style="color:red;">{{message_1}}</div><div style="color:green;">{{message_2}}</div></p>
     <p> Currently Active Quota: {{Active_Quota}} Subscription</p>
     <p> Quota Valid Date till:  <div style="color:green;">{{Quota_valid_date}}</div><div style="color:green;">{{Quota_valid_date_old}}</div><div style="color:red;">{{Quota_valid_date_old_2}}</div></p>
     <P> Important Note: After any change on Quota Restart the Server to make the new Quota effect</P>

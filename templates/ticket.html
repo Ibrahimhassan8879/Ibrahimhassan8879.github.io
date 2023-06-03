@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Tickets
 {% endblock %}
 
 {% block main %}
@@ -53,7 +53,9 @@ Query
     <p></p>
     <button type="submit" class="btn btn-primary">Get Ticket</button>
     <p></p>
-    <p>{{message}}</p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
+    <p></p>
 </form>
 {% if request.method == 'POST' %}
 <h2>Reservation Ticket</h2>
@@ -64,6 +66,7 @@ Query
 <p></p>
 <a id="download-link" href="data:image/png;base64,{{ base64_image }}" download="reservation_ticket.png">Download</a>
 <button onclick="printImage()" class="btn btn-secondary">Print</button>
+<p></p>
 <script>
     function printImage() {
         var image = document.getElementById('ticket-image');

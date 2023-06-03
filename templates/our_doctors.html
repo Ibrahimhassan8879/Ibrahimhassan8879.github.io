@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}
-Query
+Our Doctors
 {% endblock %}
 
 {% block main %}
@@ -37,38 +37,37 @@ Query
     {% endif %}
     {% endif %}
     <p></p>
-    <p>{{message}}</p>
-    <table>
-        <tr>
-            <th>
-                Doctors name
-            </th>
-            <th>
-                Doctors Specialty
-            </th>
-            <th>
-                Doctor Days Available
-            </th>
-        </tr>
-                {% for doctor in Doctors %}
-        <tr>
-            <td>
-                <div class="mb-3" id="div-{{loop.index}}">
-                    {{doctor.Doctor_name}}
-                </div>
-            </td>
-            <td>
-                <div class="mb-3" name="doctor_specialty">
-                    {{doctor.Doctor_specialty}}
-                </div>
-            </td>
-            <td>
-                <div class="mb-3" name="doctor_specialty">
-                    {{doctor.Days_available}}
-                </div>
-            </td>
-            {% endfor %}
-        </tr>
-    </table>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
+
+    <div class="container">
+        {% for doctor in Doctors %}
+        <p></p>
+        <div class="doctor-card">
+          <div class="row align-items-center">
+            <div class="col-md-9">
+              <div class="doctor-info">
+                <h3 class="doctor-name text-primary">Doctor: {{ doctor.Doctor_name }}</h3>
+                <p class="doctor-specialty text-muted">Specialty: {{ doctor.Doctor_specialty }}</p>
+                <p class="days-available">Days Available: {{ doctor.Days_available }}</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="doctor-image">
+                <img src="static/Doctors_photos/Doctor_id_{{doctor.Doctor_id}}.jpg" class="img-thumbnail" onerror="reloadImage(this)">
+              </div>
+            </div>
+          </div>
+        </div>
+        <p></p>
+        {% endfor %}
+      </div>
+      <script>
+        function reloadImage(image) {
+          image.onerror = null; // Remove the onerror event to prevent an infinite loop
+          image.src = "static/Doctors_photos/Image_Doctor.jpg"; // Replace the image source with a placeholder image or any other suitable image
+        }
+        </script>
 </form>
 {% endblock %}
+

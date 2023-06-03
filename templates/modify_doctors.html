@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 {% block title %}
-Query
+Modify Doctors
 {% endblock %}
 
 {% block main %}
@@ -18,9 +18,18 @@ Query
     <button onclick="showCase(3)" class="btn btn-primary">Modify Doctor days</button>
     <button onclick="showCase(4)" class="btn btn-primary">Modify Doctor Price</button>
 </div>
-
+<p></p>
+<div style ="color:green">{{message_1}}</div>
+<div style ="color:red">{{message_2}}</div>
+<div style ="color:green">{{message_3}}</div>
+<div style ="color:red">{{message_4}}</div>
+<div style ="color:green">{{message_5}}</div>
+<div style ="color:red">{{message_6}}</div>
+<div style ="color:green">{{message_7}}</div>
+<div style ="color:red">{{message_8}}</div>
+<p></p>
 <div class="case" id = "case1">
-<form action="/modify_doctors" method="POST">
+<form action="/modify_doctors" enctype=multipart/form-data method="POST">
     <p></p>
     <div>Add new doctor</div>
             <p></p>
@@ -47,13 +56,13 @@ Query
             <input  name ="Doctor_price" placeholder="Reservation Price" autocomplete="off"  class="form-control mx-auto w-auto" required>
         </div>
         <p></p>
+        <div class="mb-3">
+            <input type="file" name="doctor_image" class="form-control mx-auto w-auto" accept="image/*" required>
+        </div>
+        <div>Note: Allowed photo type jpg and max size of 600x600 px</div>
             <div>
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
-            <p></p>
-            <div class ="color:green">{{message_1}}</div>
-            <div class ="color:red">{{message_2}}</div>
-            <p></p>
 </form>
 </div>
 <div class="case" id="case2">
@@ -76,8 +85,7 @@ Query
             <button type="submit" class="btn btn-primary">Remove</button>
         </div>
         <p></p>
-        <div class ="color:green">{{message_3}}</div>
-        <div class ="color:red">{{message_4}}</div>
+
         <p></p>
 </form>
 </div>
@@ -105,8 +113,7 @@ Query
             <button type="submit" class="btn btn-primary">Modify</button>
         </div>
         <p></p>
-        <div class ="color:green">{{message_5}}</div>
-        <div class ="color:red">{{message_6}}</div>
+
         <p></p>
 </form>
 </div>
@@ -134,8 +141,7 @@ Query
             <button type="submit" class="btn btn-primary">Modify</button>
         </div>
         <p></p>
-        <div class ="color:green">{{message_7}}</div>
-        <div class ="color:red">{{message_8}}</div>
+
         <p></p>
 </form>
 </div>

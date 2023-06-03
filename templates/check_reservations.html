@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "layout_2.html" %}
 
 {% block title %}
-    Review Reservations
+    Check Reservations
 {% endblock %}
 
 {% block main %}
@@ -47,6 +47,7 @@
         <button class="btn btn-primary" type="submit">Review Reservations</button>
     </form>
     <p></p>
-    <p>{{message}}</p>
+    <p style="color:red;">{{message_1}}</p>
+    <p style="color:green;">{{message_2}}</p>
 
 {% endblock %}
